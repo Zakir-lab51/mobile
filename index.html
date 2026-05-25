@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Zakir Lab Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color: transparent; }
+  :root {
+    --cream:#F5F0E8;
+    --ink:#1A1714;
+    --accent:#C84B2F;
+    --gold:#D4A847;
+    --muted:#7A7068;
+    --card:#FDFAF5;
+    --line:rgba(26,23,20,.10);
+    --shadow:0 18px 45px rgba(26,23,20,.08);
+  }
+  html[data-theme="dark"] {
+    --cream:#15120F;
+    --ink:#F5F0E8;
+    --accent:#E66A4E;
+    --gold:#DDB35A;
+    --muted:#B7AAA0;
+    --card:#211C18;
+    --line:rgba(245,240,232,.12);
+    --shadow:0 18px 45px rgba(0,0,0,.30);
+  }
+  html { scroll-behavior:smooth; }
+  body {
+    min-height:100vh;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'DM Sans', sans-serif;
+    overflow-x:hidden;
+    cursor:auto;
+    padding-bottom:92px;
+    transition:background .35s ease, color .35s ease;
+  }
+  body::before {
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    background:
+      radial-gradient(circle at 18% 4%, rgba(212,168,71,.18), transparent 30%),
+      radial-gradient(circle at 90% 12%, rgba(200,75,47,.12), transparent 32%),
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='260' height='260'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='260' height='260' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+  a { color:inherit; text-decoration:none; }
+  .app {
+    position:relative;
+    z-index:1;
+    width:min(100%, 560px);
+    margin:0 auto;
+    padding:14px 14px 0;
+  }
+  .topbar {
+    position:sticky;
+    top:10px;
+    z-index:10;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:rgba(253,250,245,.78);
+    backdrop-filter:blur(18px);
+    box-shadow:0 12px 30px rgba(26,23,20,.06);
+  }
+  html[data-theme="dark"] .topbar { background:rgba(33,28,24,.78); box-shadow:0 12px 30px rgba(0,0,0,.24); }
+  .brand { display:flex; align-items:center; gap:9px; min-width:0; }
+  .brand-dot { width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 7px rgba(200,75,47,.10); }
+  .brand-name { font-family:'Syne',sans-serif; font-weight:800; letter-spacing:-.7px; font-size:19px; white-space:nowrap; }
+  .top-actions { display:flex; gap:8px; }
+  .icon-btn {
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    border-radius:999px;
+    padding:9px 11px;
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-family:'DM Sans',sans-serif;
+  }
+  .hero {
+    padding:44px 4px 18px;
+  }
+  .eyebrow {
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:18px;
+  }
+  .eyebrow-line { width:34px; height:1px; background:var(--accent); }
+  .eyebrow-text { color:var(--accent); font-size:11px; letter-spacing:2.6px; text-transform:uppercase; }
+  .hero h1 {
+    font-family:'Syne',sans-serif;
+    font-size:clamp(48px, 15vw, 72px);
+    line-height:.88;
+    letter-spacing:-3px;
+  }
+  .hero h1 span { color:var(--accent); font-style:italic; }
+  .hero p {
+    margin-top:22px;
+    color:var(--muted);
+    line-height:1.7;
+    font-weight:300;
+    max-width:310px;
+  }
+  .quick-actions {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+    margin:18px 0 22px;
+  }
+  .quick-btn {
+    min-height:52px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    text-align:center;
+    border-radius:999px;
+    border:1px solid var(--ink);
+    font-size:12px;
+    letter-spacing:1.4px;
+    text-transform:uppercase;
+  }
+  .quick-btn.primary { background:var(--ink); color:var(--cream); }
+  .quick-btn.secondary { background:transparent; color:var(--ink); }
+  .stat-strip {
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:10px;
+    margin:16px 0 24px;
+  }
+  .stat {
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:18px;
+    padding:14px 10px;
+    box-shadow:var(--shadow);
+  }
+  .stat strong {
+    display:block;
+    font-family:'Syne',sans-serif;
+    font-size:30px;
+    letter-spacing:-1px;
+    line-height:1;
+  }
+  .stat span {
+    display:block;
+    margin-top:7px;
+    color:var(--muted);
+    font-size:10px;
+    letter-spacing:1.2px;
+    text-transform:uppercase;
+  }
+  .section-row {
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    gap:12px;
+    margin:24px 4px 12px;
+  }
+  .section-title {
+    font-family:'Syne',sans-serif;
+    font-size:13px;
+    letter-spacing:2.8px;
+    text-transform:uppercase;
+  }
+  .section-note {
+    color:var(--muted);
+    font-size:11px;
+    text-transform:uppercase;
+    letter-spacing:1px;
+  }
+  .card-grid {
+    display:grid;
+    gap:12px;
+  }
+  .tile {
+    position:relative;
+    min-height:154px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:20px;
+    background:
+      radial-gradient(circle at top right, rgba(212,168,71,.16), transparent 36%),
+      var(--card);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .tile::after {
+    content:attr(data-num);
+    position:absolute;
+    right:10px;
+    bottom:-8px;
+    font-family:'Syne',sans-serif;
+    font-weight:800;
+    font-size:76px;
+    letter-spacing:-4px;
+    line-height:1;
+    color:rgba(26,23,20,.05);
+  }
+  html[data-theme="dark"] .tile::after { color:rgba(245,240,232,.06); }
+  .tile.dark {
+    background:var(--ink);
+    color:var(--cream);
+  }
+  .tile.dark p { color:rgba(245,240,232,.68); }
+  .tile.dark .tag { color:var(--gold); }
+  .tag {
+    color:var(--accent);
+    font-size:10px;
+    letter-spacing:2px;
+    text-transform:uppercase;
+  }
+  .tile h2 {
+    font-family:'Syne',sans-serif;
+    font-size:30px;
+    line-height:.96;
+    letter-spacing:-1px;
+    margin-top:10px;
+  }
+  .tile p {
+    position:relative;
+    z-index:1;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.55;
+    max-width:82%;
+  }
+  .arrow {
+    position:absolute;
+    right:18px;
+    top:18px;
+    width:38px;
+    height:38px;
+    display:grid;
+    place-items:center;
+    border:1px solid var(--line);
+    border-radius:50%;
+    background:rgba(255,255,255,.42);
+  }
+  .mini-grid {
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .mini {
+    min-height:124px;
+    padding:16px;
+    border:1px solid var(--line);
+    border-radius:20px;
+    background:var(--card);
+    box-shadow:var(--shadow);
+  }
+  .mini strong {
+    display:block;
+    font-family:'Syne',sans-serif;
+    font-size:20px;
+    letter-spacing:-.5px;
+    line-height:1;
+    margin:8px 0;
+  }
+  .mini span {
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.35;
+  }
+  .updates {
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:18px;
+    box-shadow:var(--shadow);
+  }
+  .updates h3 {
+    font-family:'Syne',sans-serif;
+    font-size:26px;
+    letter-spacing:-.8px;
+    margin-bottom:12px;
+  }
+  .update-line {
+    display:grid;
+    grid-template-columns:8px 1fr;
+    gap:10px;
+    color:var(--muted);
+    font-size:13px;
+    line-height:1.55;
+    margin:10px 0;
+  }
+  .dot { width:7px; height:7px; border-radius:50%; background:var(--accent); margin-top:7px; }
+  footer {
+    padding:26px 4px 10px;
+    color:var(--muted);
+    font-size:12px;
+    display:flex;
+    justify-content:space-between;
+    gap:12px;
+  }
+  .bottom-nav {
+    position:fixed;
+    left:10px;
+    right:10px;
+    bottom:10px;
+    z-index:80;
+    max-width:540px;
+    margin:0 auto;
+    display:grid;
+    grid-template-columns:repeat(5,1fr);
+    gap:6px;
+    padding:8px;
+    border:1px solid var(--line);
+    border-radius:22px;
+    background:rgba(253,250,245,.84);
+    backdrop-filter:blur(18px);
+    box-shadow:0 18px 50px rgba(26,23,20,.14);
+  }
+  html[data-theme="dark"] .bottom-nav { background:rgba(33,28,24,.86); box-shadow:0 18px 50px rgba(0,0,0,.35); }
+  .bottom-nav a {
+    display:grid;
+    place-items:center;
+    gap:3px;
+    min-height:46px;
+    border-radius:16px;
+    color:var(--muted);
+    font-size:10px;
+    text-transform:uppercase;
+    letter-spacing:.8px;
+  }
+  .bottom-nav a strong {
+    font-family:'Syne',sans-serif;
+    font-size:15px;
+    color:var(--ink);
+    line-height:1;
+  }
+  .search-modal {
+    display:none;
+    position:fixed;
+    inset:0;
+    z-index:100;
+    padding:74px 14px 20px;
+    background:rgba(26,23,20,.30);
+    backdrop-filter:blur(14px);
+  }
+  html[data-theme="dark"] .search-modal { background:rgba(0,0,0,.48); }
+  .search-modal.open { display:block; }
+  .search-box {
+    max-width:540px;
+    margin:0 auto;
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:16px;
+    box-shadow:0 28px 80px rgba(26,23,20,.22);
+  }
+  .search-head {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin-bottom:12px;
+  }
+  .search-head strong {
+    font-family:'Syne',sans-serif;
+    font-size:22px;
+    letter-spacing:-.6px;
+  }
+  .search-close {
+    width:36px;
+    height:36px;
+    border-radius:50%;
+    border:1px solid var(--line);
+    background:var(--cream);
+    color:var(--ink);
+    font-size:22px;
+  }
+  .search-input {
+    width:100%;
+    border:1px solid var(--line);
+    background:var(--cream);
+    color:var(--ink);
+    border-radius:999px;
+    padding:14px 16px;
+    outline:none;
+    font-family:'DM Sans',sans-serif;
+  }
+  .results {
+    display:grid;
+    gap:9px;
+    margin-top:12px;
+    max-height:55vh;
+    overflow:auto;
+  }
+  .result-item {
+    display:block;
+    border:1px solid var(--line);
+    background:var(--cream);
+    border-radius:16px;
+    padding:13px;
+  }
+  .result-item strong {
+    display:block;
+    font-family:'Syne',sans-serif;
+    margin-bottom:4px;
+  }
+  .result-item span {
+    color:var(--muted);
+    font-size:12px;
+    line-height:1.4;
+  }
+  @media (min-width:700px) {
+    .app { max-width:640px; }
+    .tile { min-height:170px; }
+  }
+
+/* FORCE MOBILE REPO LAYOUT ON EVERY SCREEN */
+*, *::before, *::after {
+  cursor: auto !important;
+}
+body {
+  cursor: auto !important;
+  overflow-x: hidden !important;
+  padding-bottom: 92px !important;
+}
+.cursor,
+#cursor,
+.pc-cursor,
+#pc-cursor,
+.pc-sidebar,
+#pc-sidebar,
+.pc-mobile-menu {
+  display: none !important;
+}
+.page {
+  width: 100% !important;
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  padding-bottom: 96px !important;
+}
+nav {
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.mobile-bottom-nav {
+  display: grid !important;
+}
+.chapter-grid,
+.notes-grid,
+.test-grid,
+.grid,
+.cards-grid,
+.study-tools-grid,
+.tools-grid,
+.results,
+.mini-links,
+.update-panel,
+.updates-layout {
+  grid-template-columns: 1fr !important;
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-dot"></span>
+      <span class="brand-name">Zakir Lab</span>
+    </div>
+    <div class="top-actions">
+      <button class="icon-btn" onclick="openSearch()">Search</button>
+      <button class="icon-btn" onclick="toggleTheme()"><span data-theme-label>Dark</span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Est. 2026</span></div>
+    <h1>Welcome<br><span>Enthusiasts,</span><br>Have a Look</h1>
+    <p>Everything I build along the way.</p>
+  </section>
+
+  <div class="quick-actions">
+    <a class="quick-btn primary" href="computer-class/">Start Learning</a>
+    <a class="quick-btn secondary" href="notes-and-guides/">Open Notes</a>
+  </div>
+
+  <div class="stat-strip">
+    <div class="stat"><strong>10</strong><span>Sections</span></div>
+    <div class="stat"><strong>8</strong><span>PDFs</span></div>
+    <div class="stat"><strong>4</strong><span>Tests</span></div>
+  </div>
+
+  <section>
+    <div class="section-row"><span class="section-title">Core</span><span class="section-note">Main pages</span></div>
+    <div class="card-grid">
+      <a class="tile" href="computer-class/" data-num="01">
+        <div><span class="tag">Computer Science</span><h2>Computer<br>Class</h2></div>
+        <p>Chapter-wise interactive mock tests and practice.</p><span class="arrow">→</span>
+      </a>
+      <a class="tile" href="notes-and-guides/" data-num="02">
+        <div><span class="tag">Study Library</span><h2>Notes &<br>Guides</h2></div>
+        <p>PDF notes and class materials arranged neatly.</p><span class="arrow">→</span>
+      </a>
+      <a class="tile" href="full-length-test/" data-num="03">
+        <div><span class="tag">Mock Exam</span><h2>Full Length<br>Tests</h2></div>
+        <p>Four 100-question tests with timer and result review.</p><span class="arrow">→</span>
+      </a>
+      <a class="tile dark" href="dashboard/" data-num="">
+        <div><span class="tag">Live Progress</span><h2>Learning<br>Dashboard</h2></div>
+        <p>Track streaks, completed topics and saved scores.</p><span class="arrow">→</span>
+      </a>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-row"><span class="section-title">Tools</span><span class="section-note">Quick open</span></div>
+    <div class="mini-grid">
+      <a class="mini" href="flashcards/"><span class="tag">Recall</span><strong>Flashcards</strong><span>Quick active recall.</span></a>
+      <a class="mini" href="cheatsheets/"><span class="tag">Reference</span><strong>Cheatsheets</strong><span>Short revision cards.</span></a>
+      <a class="mini" href="pyqs/"><span class="tag">Practice</span><strong>PYQs</strong><span>Solved questions.</span></a>
+      <a class="mini" href="leaderboard/"><span class="tag">Scores</span><strong>Leaderboard</strong><span>Saved rankings.</span></a>
+      <a class="mini" href="dev-log/"><span class="tag">Blog</span><strong>Dev Log</strong><span>Building notes.</span></a>
+      <a class="mini" href="suggest/"><span class="tag">Community</span><strong>Suggest</strong><span>Send ideas.</span></a>
+    </div>
+  </section>
+
+  <section>
+    <div class="section-row"><span class="section-title">Updates</span><span class="section-note">Mobile</span></div>
+    <div class="updates">
+      <h3>What's New</h3>
+      <div class="update-line"><span class="dot"></span><span>Mobile-first homepage with bottom navigation.</span></div>
+      <div class="update-line"><span class="dot"></span><span>All inner pages are adjusted for phone browsers.</span></div>
+      <div class="update-line"><span class="dot"></span><span>Quiz review pages and timer popups are fixed for mobile scrolling.</span></div>
+    </div>
+  </section>
+
+  <footer>
+    <span>© 2026 Zakir Lab</span>
+    <span>Mobile build</span>
+  </footer>
+</div>
+
+<nav class="bottom-nav">
+  <a href="./"><strong>⌂</strong><span>Home</span></a>
+  <a href="computer-class/"><strong>C</strong><span>Class</span></a>
+  <a href="full-length-test/"><strong>T</strong><span>Tests</span></a>
+  <a href="notes-and-guides/"><strong>N</strong><span>Notes</span></a>
+  <a href="dashboard/"><strong>D</strong><span>Dash</span></a>
+</nav>
+
+<div class="search-modal" id="search-modal">
+  <div class="search-box">
+    <div class="search-head">
+      <strong>Search Zakir Lab</strong>
+      <button class="search-close" onclick="closeSearch()">×</button>
+    </div>
+    <input class="search-input" id="site-search" type="search" placeholder="Search notes, mock tests, flashcards...">
+    <div class="results" id="search-results"></div>
+  </div>
+</div>
+
+<script>
+  const root = document.documentElement;
+  root.dataset.theme = localStorage.getItem('ZAKIR_THEME') || 'light';
+  function updateThemeLabels(){ document.querySelectorAll('[data-theme-label]').forEach(el => el.textContent = root.dataset.theme === 'dark' ? 'Light' : 'Dark'); }
+  function toggleTheme(){ root.dataset.theme = root.dataset.theme === 'dark' ? 'light' : 'dark'; localStorage.setItem('ZAKIR_THEME', root.dataset.theme); updateThemeLabels(); }
+  updateThemeLabels();
+
+  const modal = document.getElementById('search-modal');
+  const input = document.getElementById('site-search');
+  const results = document.getElementById('search-results');
+  const SEARCH_INDEX = [
+    ['Computer Class','Mock Tests','Chapter-wise computer application tests','computer-class/'],
+    ['Notes & Guides','PDF Library','Communication, digestive system, HDPC, blood physiology and more','notes-and-guides/'],
+    ['Full Length Tests','Mock Exam','Four 100-question computer application tests','full-length-test/'],
+    ['Dashboard','Progress','Study streak, completed topics and score history','dashboard/'],
+    ['Flashcards','Revision','Flip cards for terms and exam prep','flashcards/'],
+    ['Cheatsheets','Reference','Keyboard shortcuts and quick reference','cheatsheets/'],
+    ['PYQs','Practice','Previous-year style questions with answers','pyqs/'],
+    ['Leaderboard','Scores','Local leaderboard from saved quiz results','leaderboard/'],
+    ['Dev Log','Blog','Building in public posts','dev-log/'],
+    ['Suggest','Community','Suggest a question or resource','suggest/']
+  ];
+  function render(q=''){
+    const query = q.trim().toLowerCase();
+    const matches = SEARCH_INDEX.filter(x => !query || x.join(' ').toLowerCase().includes(query)).slice(0,8);
+    results.innerHTML = matches.map(x => `<a class="result-item" href="${x[3]}"><strong>${x[0]}</strong><span>${x[1]} · ${x[2]}</span></a>`).join('');
+  }
+  function openSearch(){ modal.classList.add('open'); render(input.value); setTimeout(() => input.focus(), 80); }
+  function closeSearch(){ modal.classList.remove('open'); }
+  input.addEventListener('input', e => render(e.target.value));
+  modal.addEventListener('click', e => { if(e.target === modal) closeSearch(); });
+  document.addEventListener('keydown', e => { if(e.key === 'Escape') closeSearch(); });
+</script>
+</body>
+</html>

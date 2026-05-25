@@ -1,0 +1,2311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Basics of Operating Systems — Mock Test</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root {
+    --cream:#F5F0E8;
+    --ink:#1A1714;
+    --accent:#C84B2F;
+    --gold:#D4A847;
+    --muted:#7A7068;
+    --card-bg:#FDFAF5;
+    --correct:#3f9b5f;
+    --wrong:#c84b2f;
+    --skip:#d4a847;
+    --line:rgba(26,23,20,0.10);
+  }
+  html { scroll-behavior:smooth; }
+  body {
+    min-height:100vh;
+    font-family:'DM Sans', sans-serif;
+    background:var(--cream);
+    color:var(--ink);
+    overflow-x:hidden;
+    cursor:none;
+  }
+  body::before {
+    content:'';
+    position:fixed; inset:0; pointer-events:none; z-index:0;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='300' height='300'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='300' height='300' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");
+  }
+  .cursor {
+    position:fixed; width:10px; height:10px; background:var(--accent); border-radius:50%;
+    pointer-events:none; z-index:9999; transform:translate(-50%,-50%);
+    transition:width .3s,height .3s,opacity .3s; mix-blend-mode:multiply;
+  }
+  .cursor.big { width:38px; height:38px; opacity:.25; }
+
+  #home, #test-screen, #result-screen, #review-modal, #timer-modal { position:relative; z-index:1; }
+  .page { max-width:1080px; margin:0 auto; padding:0 40px 80px; }
+  nav {
+    display:flex; align-items:center; justify-content:space-between;
+    padding:32px 0 0;
+  }
+  .logo, .back-link { text-decoration:none; color:var(--ink); }
+  .logo {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:18px;
+    letter-spacing:-.5px; display:flex; align-items:center; gap:8px;
+  }
+  .logo-dot { width:8px; height:8px; border-radius:50%; background:var(--accent); }
+  .back-link, .top-btn {
+    display:flex; align-items:center; gap:8px; font-size:12px; letter-spacing:2px;
+    text-transform:uppercase; color:var(--muted); transition:color .2s;
+  }
+  .back-link:hover { color:var(--accent); }
+  .back-arrow {
+    width:26px; height:26px; border:1px solid currentColor; border-radius:50%;
+    display:flex; align-items:center; justify-content:center; font-size:13px;
+  }
+  .hero {
+    padding:70px 0 42px; animation:fadeUp .8s ease both;
+  }
+  .eyebrow { display:flex; align-items:center; gap:12px; margin-bottom:18px; }
+  .eyebrow-line { width:36px; height:1px; background:var(--accent); }
+  .eyebrow-text { font-size:11px; letter-spacing:3px; text-transform:uppercase; color:var(--accent); }
+  .hero h1 {
+    font-family:'Syne', sans-serif; font-size:clamp(42px,7vw,78px);
+    line-height:.95; letter-spacing:-2.8px; margin-bottom:18px;
+  }
+  .hero h1 span { color:var(--accent); font-style:italic; }
+  .hero p { color:var(--muted); max-width:560px; line-height:1.7; font-weight:300; }
+  .start-panel {
+    margin-top:22px; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:28px; display:grid; grid-template-columns:1fr auto;
+    align-items:center; gap:24px; box-shadow:0 24px 60px rgba(26,23,20,.08);
+  }
+  .start-kicker { color:var(--accent); letter-spacing:2px; text-transform:uppercase; font-size:11px; }
+  .start-panel h2 { font-family:'Syne',sans-serif; font-size:28px; margin:8px 0; }
+  .start-panel p { color:var(--muted); line-height:1.55; font-weight:300; }
+  .primary-btn, .secondary-btn, .submit-btn, .review-close, .timer-chip, .timer-start-btn, .timer-cancel-btn {
+    border:1px solid rgba(26,23,20,.12); border-radius:999px; background:var(--card-bg);
+    color:var(--ink); padding:12px 20px; cursor:pointer; font-weight:700;
+    font-family:'DM Sans',sans-serif; transition:transform .25s, background .25s, color .25s, box-shadow .25s;
+  }
+  .primary-btn, .submit-btn, .timer-start-btn {
+    background:var(--ink); color:var(--cream); border-color:var(--ink);
+  }
+  .primary-btn:hover, .submit-btn:hover, .timer-start-btn:hover, .secondary-btn:hover, .review-close:hover, .timer-chip:hover, .timer-cancel-btn:hover {
+    transform:translateY(-2px); box-shadow:0 16px 34px rgba(26,23,20,.12);
+  }
+
+  #test-screen { display:none; min-height:100vh; padding-bottom:90px; }
+  .test-header {
+    position:sticky; top:12px; z-index:100; width:min(1180px,calc(100% - 32px));
+    margin:12px auto 0; padding:12px 16px; border-radius:4px;
+    display:flex; justify-content:space-between; align-items:center; gap:14px;
+    background:rgba(253,250,245,.92); border:1px solid rgba(26,23,20,.10);
+    box-shadow:0 16px 42px rgba(26,23,20,.10); backdrop-filter:blur(18px);
+  }
+  .header-left, .progress-wrap { display:flex; align-items:center; gap:12px; min-width:0; }
+  .test-title-bar {
+    font-family:'Syne',sans-serif; font-weight:800; font-size:15px;
+    white-space:nowrap; overflow:hidden; text-overflow:ellipsis;
+  }
+  .progress-wrap { flex:1; justify-content:flex-end; }
+  .progress-bar-outer {
+    width:180px; height:7px; border-radius:999px; overflow:hidden;
+    background:rgba(26,23,20,.10);
+  }
+  .progress-bar-inner {
+    width:0%; height:100%; background:linear-gradient(90deg,var(--accent),var(--gold));
+    transition:width .35s cubic-bezier(.16,1,.3,1);
+  }
+  .progress-label, .timer-pill {
+    color:var(--muted); font-size:12px; white-space:nowrap; font-weight:700;
+  }
+  .timer-pill.low { color:var(--wrong); animation:pulse 1s infinite; }
+  .timer-pill.done { color:var(--wrong); }
+
+  .questions-wrap {
+    max-width:1180px; margin:0 auto; padding:38px 32px 90px;
+    display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:18px;
+  }
+  .q-card {
+    position:relative; overflow:hidden; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:26px; box-shadow:0 18px 45px rgba(26,23,20,.07);
+    opacity:0; transform:translateY(18px); animation:cardIn .42s ease forwards;
+  }
+  .q-card::after {
+    content:''; position:absolute; left:0; top:0; width:3px; height:0; background:var(--accent);
+    transition:height .35s cubic-bezier(.16,1,.3,1);
+  }
+  .q-card:hover::after { height:100%; }
+  .q-num {
+    display:block; color:var(--accent); font-size:11px; letter-spacing:2px; text-transform:uppercase;
+    font-weight:800; margin-bottom:10px;
+  }
+  .q-text { font-weight:700; line-height:1.6; margin-bottom:18px; letter-spacing:-.1px; }
+  .options-grid { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+  .opt-btn, .review-opt {
+    position:relative; overflow:hidden; min-height:58px; display:flex; align-items:flex-start; gap:10px;
+    padding:13px 14px; border-radius:4px; border:1px solid rgba(26,23,20,.10);
+    color:var(--ink); background:#fffaf2; text-align:left; font-family:'DM Sans',sans-serif;
+    line-height:1.42; cursor:pointer; transition:transform .32s cubic-bezier(.16,1,.3,1), box-shadow .32s, border-color .32s, background .32s;
+  }
+  .opt-btn:hover:not(:disabled) { transform:translateY(-2px); border-color:rgba(200,75,47,.22); box-shadow:0 13px 28px rgba(26,23,20,.09); }
+  .opt-label, .review-opt-label {
+    position:relative; z-index:2; flex-shrink:0; min-width:24px; height:24px;
+    border-radius:50%; display:grid; place-items:center; color:var(--accent);
+    font-size:11px; font-weight:800; border:1px solid rgba(200,75,47,.22); background:#fff;
+  }
+  .opt-text { position:relative; z-index:2; overflow-wrap:anywhere; }
+  .fill-layer {
+    position:absolute; inset:0; z-index:1; pointer-events:none; background:rgba(200,75,47,.12);
+    clip-path:inset(0 100% 0 0); transition:none;
+  }
+  .opt-btn.selected .fill-layer { animation:sweepIn .72s linear forwards; }
+  .opt-btn.draining .fill-layer { animation:sweepOut .62s linear forwards; }
+  .opt-btn.selected { border-color:rgba(200,75,47,.34); background:#fff6ec; }
+  .opt-btn.selected .opt-label { background:var(--accent); color:white; }
+  .opt-btn.correct { border-color:rgba(63,155,95,.55); background:rgba(63,155,95,.10); animation:pop .45s; }
+  .opt-btn.correct .opt-label, .review-opt.right .review-opt-label { background:var(--correct); color:white; border-color:var(--correct); }
+  .opt-btn.wrong { border-color:rgba(200,75,47,.65); background:rgba(200,75,47,.10); animation:shake .38s; }
+  .opt-btn.wrong .opt-label, .review-opt.yours .review-opt-label { background:var(--wrong); color:white; border-color:var(--wrong); }
+  .opt-btn.skipped-correct { border-color:rgba(212,168,71,.65); background:rgba(212,168,71,.14); animation:pop .45s; }
+  .opt-btn.skipped-correct .opt-label { background:var(--skip); color:var(--ink); border-color:var(--skip); }
+  .opt-btn:disabled { cursor:default; }
+  .ripple {
+    position:absolute; z-index:3; pointer-events:none; border-radius:50%; background:rgba(200,75,47,.18);
+    transform:scale(0); opacity:1; animation:ripple .85s linear forwards;
+  }
+
+  #result-screen { display:none; min-height:100vh; padding:70px 24px; }
+  .result-inner {
+    max-width:760px; margin:0 auto; text-align:center; background:var(--card-bg); border:1px solid var(--line);
+    border-radius:4px; padding:36px 28px; box-shadow:0 24px 60px rgba(26,23,20,.10);
+  }
+  .result-badge { color:var(--accent); font-size:11px; letter-spacing:3px; text-transform:uppercase; font-weight:800; }
+  .result-title { font-family:'Syne',sans-serif; font-size:clamp(32px,5vw,52px); letter-spacing:-1.5px; margin:10px 0; }
+  .score-big { font-family:'Syne',sans-serif; font-size:72px; font-weight:800; color:var(--accent); margin:24px 0 6px; }
+  .score-msg { color:var(--muted); margin-bottom:26px; }
+  .stats-row { display:flex; justify-content:center; flex-wrap:wrap; gap:12px; margin-bottom:30px; }
+  .stat-pill { min-width:120px; padding:16px 22px; background:#fffaf2; border:1px solid var(--line); border-radius:4px; }
+  .stat-pill .val { display:block; font-family:'Syne'; font-size:28px; font-weight:800; }
+  .stat-pill .lbl { display:block; color:var(--muted); font-size:11px; letter-spacing:1px; text-transform:uppercase; }
+  .correct-val { color:var(--correct); } .wrong-val { color:var(--wrong); } .skip-val { color:var(--skip); }
+  .result-actions { display:flex; justify-content:center; flex-wrap:wrap; gap:10px; }
+
+  #review-modal, #timer-modal {
+    display:none; position:fixed; inset:0; z-index:250; overflow:auto; padding:38px 20px 80px;
+    background:rgba(245,240,232,.92); backdrop-filter:blur(12px);
+  }
+  .review-inner { max-width:980px; margin:0 auto; }
+  .review-header {
+    position:sticky; top:12px; z-index:2; display:flex; align-items:center; justify-content:space-between; gap:16px;
+    background:rgba(253,250,245,.94); border:1px solid var(--line); border-radius:4px; padding:14px 16px;
+    box-shadow:0 16px 42px rgba(26,23,20,.08); backdrop-filter:blur(18px); margin-bottom:22px;
+  }
+  .review-title { font-family:'Syne'; font-size:22px; font-weight:800; }
+  .review-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px; }
+  .review-card {
+    background:var(--card-bg); border:1px solid var(--line); border-radius:4px; padding:22px; box-shadow:0 16px 42px rgba(26,23,20,.07);
+  }
+  .review-q-text { font-weight:700; line-height:1.55; margin-bottom:14px; }
+  .review-opts { display:grid; gap:8px; }
+  .review-opt { cursor:default; min-height:auto; background:#fffaf2; color:var(--muted); }
+  .review-opt.right, .review-opt.yours { color:var(--ink); }
+  .review-tags { display:flex; flex-wrap:wrap; gap:8px; margin-top:12px; }
+  .tag { font-size:10px; letter-spacing:1px; text-transform:uppercase; border:1px solid var(--line); padding:5px 9px; border-radius:999px; color:var(--muted); }
+  .tag.correct { color:var(--correct); border-color:rgba(63,155,95,.35); }
+  .tag.wrong { color:var(--wrong); border-color:rgba(200,75,47,.35); }
+  .tag.skip { color:var(--skip); border-color:rgba(212,168,71,.45); }
+
+  .timer-box {
+    max-width:520px; margin:70px auto 0; background:var(--card-bg); border:1px solid var(--line); border-radius:4px;
+    padding:30px; box-shadow:0 26px 70px rgba(26,23,20,.16); animation:timerPop .35s cubic-bezier(.16,1,.3,1) both;
+  }
+  .timer-kicker { color:var(--accent); letter-spacing:3px; text-transform:uppercase; font-size:11px; font-weight:800; }
+  .timer-title { font-family:'Syne'; font-size:34px; letter-spacing:-1px; margin:8px 0; }
+  .timer-sub { color:var(--muted); line-height:1.6; margin-bottom:18px; }
+  .timer-presets { display:flex; flex-wrap:wrap; gap:8px; margin-bottom:16px; }
+  .timer-chip.selected { background:var(--accent); color:white; border-color:var(--accent); }
+  .timer-custom-row { display:grid; grid-template-columns:1fr 120px; gap:10px; align-items:center; margin-bottom:18px; color:var(--muted); }
+  .timer-input {
+    width:100%; border:1px solid var(--line); background:#fffaf2; border-radius:4px; padding:12px; font:inherit; color:var(--ink);
+  }
+  .timer-actions { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
+  .confetti-layer { position:fixed; inset:0; z-index:500; pointer-events:none; overflow:hidden; }
+  .confetti-piece {
+    position:absolute; top:-20px; width:8px; height:14px; background:var(--accent);
+    animation:fall var(--duration) var(--delay) cubic-bezier(.15,.78,.25,1) forwards;
+    transform:rotate(var(--rot));
+  }
+  .confetti-piece:nth-child(3n) { background:var(--gold); border-radius:50%; }
+  .confetti-piece:nth-child(4n) { background:var(--ink); }
+
+  @keyframes cardIn { to { opacity:1; transform:translateY(0); } }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(28px); } to { opacity:1; transform:translateY(0); } }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+  @keyframes pop { 50% { transform:scale(1.018); } }
+  @keyframes shake { 25% { transform:translateX(-4px); } 75% { transform:translateX(4px); } }
+  @keyframes ripple { 0%{transform:scale(0);opacity:0} 10%{opacity:.9} 100%{transform:scale(6);opacity:0} }
+  @keyframes sweepIn {
+    0%{clip-path:inset(0 100% 0 0)} 18%{clip-path:inset(0 67% 0 0)} 36%{clip-path:inset(0 38% 0 0)}
+    55%{clip-path:inset(0 16% 0 0)} 75%{clip-path:inset(0 4% 0 0)} 100%{clip-path:inset(0 0 0 0)}
+  }
+  @keyframes sweepOut {
+    0%{clip-path:inset(0 0 0 0)} 22%{clip-path:inset(0 0 0 26%)} 48%{clip-path:inset(0 0 0 56%)}
+    76%{clip-path:inset(0 0 0 88%)} 100%{clip-path:inset(0 0 0 100%)}
+  }
+  @keyframes timerPop { from{opacity:0;transform:translateY(18px) scale(.98)} to{opacity:1;transform:translateY(0) scale(1)} }
+  @keyframes fall {
+    0% { transform:translate3d(0,-30px,0) rotate(var(--rot)); opacity:0; }
+    10% { opacity:1; }
+    100% { transform:translate3d(var(--drift),110vh,0) rotate(calc(var(--rot) + 720deg)); opacity:0; }
+  }
+
+  @media (max-width:840px) {
+    .test-header { align-items:stretch; flex-direction:column; border-radius:4px; }
+    .header-left { justify-content:space-between; }
+    .progress-wrap, .submit-btn { width:100%; }
+    .progress-bar-outer { flex:1; width:auto; }
+    .questions-wrap, .review-list { grid-template-columns:1fr; }
+    .start-panel { grid-template-columns:1fr; }
+  }
+  @media (max-width:560px) {
+    body { cursor:auto; }
+    .cursor { display:none; }
+    .page { padding:0 20px 60px; }
+    .questions-wrap { padding:24px 14px 80px; }
+    .options-grid { grid-template-columns:1fr; }
+    .q-card { padding:20px; }
+    nav { gap:16px; align-items:flex-start; }
+    .timer-custom-row { grid-template-columns:1fr; }
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 24px;
+    transform: translateX(-50%) translateY(18px);
+    background: var(--ink);
+    color: var(--cream);
+    border-radius: 999px;
+    padding: 12px 18px;
+    z-index: 99999;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .35s ease, transform .35s ease;
+    font-size: 13px;
+    box-shadow: 0 18px 45px rgba(26,23,20,.22);
+  }
+  .toast.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+
+/* PC INSIDE REDESIGN — consistent desktop sidebar and wider content */
+:root {
+  --pc-sidebar-width: 292px;
+  --pc-sidebar-collapsed: 88px;
+}
+body {
+  cursor: none;
+}
+.pc-cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  width: 10px;
+  height: 10px;
+  background: var(--accent, #C84B2F);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 99999;
+  transform: translate(-50%, -50%);
+  transition: width .26s ease, height .26s ease, opacity .26s ease, background .35s ease, box-shadow .35s ease;
+  mix-blend-mode: multiply;
+}
+.pc-cursor.big {
+  width: 38px;
+  height: 38px;
+  opacity: .24;
+}
+html[data-theme="dark"] .pc-cursor {
+  background: var(--gold, #DDB35A);
+  mix-blend-mode: normal;
+  box-shadow: 0 0 18px rgba(221,179,90,.35);
+}
+.pc-sidebar {
+  position: fixed;
+  left: 24px;
+  top: 24px;
+  bottom: 24px;
+  width: var(--pc-sidebar-width);
+  z-index: 50;
+  background:
+    radial-gradient(circle at top left, rgba(212,168,71,.18), transparent 34%),
+    linear-gradient(180deg, rgba(255,255,255,.34), transparent 36%),
+    var(--card-bg, #FDFAF5);
+  border: 1px solid var(--line, rgba(26,23,20,.10));
+  border-radius: 18px;
+  padding: 20px;
+  box-shadow: 0 22px 70px rgba(26,23,20,.09);
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  overflow: hidden;
+  transition: width .58s cubic-bezier(.16,1,.3,1), padding .58s cubic-bezier(.16,1,.3,1), transform .58s cubic-bezier(.16,1,.3,1);
+}
+html[data-theme="dark"] .pc-sidebar {
+  box-shadow: 0 22px 70px rgba(0,0,0,.35);
+}
+.pc-brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  min-height: 44px;
+}
+.pc-brand-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+.pc-brand-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--accent, #C84B2F);
+  flex: 0 0 auto;
+  box-shadow: 0 0 0 8px rgba(200,75,47,.10);
+}
+.pc-brand-name {
+  font-family: 'Syne', 'Outfit', sans-serif;
+  font-weight: 800;
+  font-size: 22px;
+  letter-spacing: -.8px;
+  white-space: nowrap;
+  color: var(--ink, #1A1714);
+}
+.pc-side-toggle {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid var(--line, rgba(26,23,20,.10));
+  background: var(--cream, #F5F0E8);
+  color: var(--ink, #1A1714);
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  transition: transform .35s ease, background .35s ease, color .35s ease, border-color .35s ease;
+  flex: 0 0 auto;
+}
+.pc-side-toggle:hover {
+  transform: rotate(-10deg) scale(1.04);
+  background: var(--accent, #C84B2F);
+  color: #fff;
+  border-color: var(--accent, #C84B2F);
+}
+.pc-side-meta {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.pc-meta-box {
+  border: 1px solid var(--line, rgba(26,23,20,.10));
+  background: var(--cream, #F5F0E8);
+  color: var(--ink, #1A1714);
+  border-radius: 12px;
+  padding: 13px;
+  min-height: 76px;
+}
+.pc-meta-num {
+  font-family: 'Syne', 'Outfit', sans-serif;
+  font-size: 30px;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -1px;
+}
+.pc-meta-label {
+  color: var(--muted, #7A7068);
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-top: 7px;
+}
+.pc-side-label {
+  color: var(--accent, #C84B2F);
+  font-size: 10px;
+  letter-spacing: 2.4px;
+  text-transform: uppercase;
+  margin: 4px 0 -4px;
+}
+.pc-side-links {
+  display: grid;
+  gap: 8px;
+  overflow-y: auto;
+  padding-right: 2px;
+}
+.pc-side-links::-webkit-scrollbar {
+  width: 5px;
+}
+.pc-side-links::-webkit-scrollbar-thumb {
+  background: rgba(122,112,104,.35);
+  border-radius: 999px;
+}
+.pc-side-link {
+  display: grid;
+  grid-template-columns: 36px 1fr;
+  gap: 12px;
+  align-items: center;
+  text-decoration: none;
+  color: var(--ink, #1A1714);
+  background: var(--cream, #F5F0E8);
+  border: 1px solid var(--line, rgba(26,23,20,.10));
+  border-radius: 12px;
+  padding: 11px;
+  transition: transform .42s cubic-bezier(.16,1,.3,1), border-color .35s ease, background .35s ease;
+}
+.pc-side-link:hover {
+  transform: translateX(4px);
+  border-color: rgba(200,75,47,.28);
+  background: var(--card-bg, #FDFAF5);
+}
+.pc-side-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: rgba(200,75,47,.10);
+  color: var(--accent, #C84B2F);
+  font-family: 'Syne', 'Outfit', sans-serif;
+  font-weight: 800;
+}
+.pc-side-text strong {
+  display: block;
+  font-family: 'Syne', 'Outfit', sans-serif;
+  font-size: 15px;
+  letter-spacing: -.35px;
+}
+.pc-side-text span {
+  display: block;
+  color: var(--muted, #7A7068);
+  font-size: 12px;
+  line-height: 1.35;
+  margin-top: 2px;
+}
+.pc-side-footer {
+  margin-top: auto;
+  border-top: 1px solid var(--line, rgba(26,23,20,.10));
+  padding-top: 14px;
+  color: var(--muted, #7A7068);
+  font-size: 12px;
+  line-height: 1.45;
+}
+body.pc-sidebar-collapsed .pc-sidebar {
+  width: var(--pc-sidebar-collapsed);
+  padding: 20px 14px;
+}
+body.pc-sidebar-collapsed .pc-brand-name,
+body.pc-sidebar-collapsed .pc-side-meta,
+body.pc-sidebar-collapsed .pc-side-label,
+body.pc-sidebar-collapsed .pc-side-text,
+body.pc-sidebar-collapsed .pc-side-footer {
+  opacity: 0;
+  pointer-events: none;
+  width: 0;
+  height: 0;
+  overflow: hidden;
+}
+body.pc-sidebar-collapsed .pc-brand-left {
+  display: none;
+}
+body.pc-sidebar-collapsed .pc-brand {
+  justify-content: center;
+}
+body.pc-sidebar-collapsed .pc-side-link {
+  grid-template-columns: 1fr;
+  padding: 11px;
+  justify-items: center;
+}
+.pc-mobile-menu {
+  display: none;
+  border: 1px solid var(--line, rgba(26,23,20,.10));
+  background: var(--card-bg, #FDFAF5);
+  color: var(--ink, #1A1714);
+  border-radius: 999px;
+  padding: 9px 12px;
+  cursor: pointer;
+  font-family: 'DM Sans', 'Manrope', sans-serif;
+  font-size: 12px;
+  letter-spacing: 1.7px;
+  text-transform: uppercase;
+  margin-right: 10px;
+}
+@media (min-width: 1101px) {
+  .page {
+    width: auto !important;
+    max-width: min(1320px, calc(100vw - 382px)) !important;
+    margin-left: 340px !important;
+    margin-right: 32px !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+  }
+  body.pc-sidebar-collapsed .page {
+    max-width: calc(100vw - 166px) !important;
+    margin-left: 126px !important;
+  }
+  nav {
+    position: sticky !important;
+    top: 18px !important;
+    z-index: 30 !important;
+    background: rgba(253,250,245,.74) !important;
+    border: 1px solid var(--line, rgba(26,23,20,.10)) !important;
+    border-radius: 16px !important;
+    backdrop-filter: blur(18px) !important;
+    padding: 14px 16px !important;
+    margin: 18px 0 22px !important;
+    box-shadow: 0 16px 44px rgba(26,23,20,.06) !important;
+  }
+  html[data-theme="dark"] nav {
+    background: rgba(33,28,24,.74) !important;
+    box-shadow: 0 16px 44px rgba(0,0,0,.22) !important;
+  }
+  .hero {
+    padding-top: 38px !important;
+  }
+  .hero h1 {
+    font-size: clamp(52px, 6.4vw, 96px) !important;
+  }
+  .chapter-grid,
+  .notes-grid,
+  .test-grid,
+  .grid,
+  .cards-grid,
+  .study-tools-grid {
+    gap: 18px !important;
+  }
+  .chapter-grid,
+  .notes-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+  .test-grid {
+    grid-template-columns: repeat(4, minmax(0, 1fr)) !important;
+  }
+  .grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+  }
+  .question-card,
+  .question-box {
+    max-width: 1080px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .test-area,
+  .quiz-area,
+  .questions-wrap {
+    max-width: 1120px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .option,
+  .opt,
+  .answer-option {
+    min-height: 54px !important;
+  }
+  .modal-card,
+  .review-modal-card {
+    max-width: min(980px, calc(100vw - 140px)) !important;
+  }
+  footer {
+    max-width: 1320px !important;
+  }
+}
+@media (max-width: 1100px) {
+  body {
+    cursor: auto;
+  }
+  .pc-cursor {
+    display: none;
+  }
+  .pc-sidebar {
+    transform: translateX(calc(-100% - 32px));
+    left: 16px;
+    top: 16px;
+    bottom: 16px;
+  }
+  .pc-sidebar.mobile-open {
+    transform: translateX(0);
+  }
+  body.pc-sidebar-collapsed .pc-sidebar {
+    width: var(--pc-sidebar-width);
+    padding: 20px;
+  }
+  body.pc-sidebar-collapsed .pc-brand-name,
+  body.pc-sidebar-collapsed .pc-side-meta,
+  body.pc-sidebar-collapsed .pc-side-label,
+  body.pc-sidebar-collapsed .pc-side-text,
+  body.pc-sidebar-collapsed .pc-side-footer {
+    opacity: 1;
+    pointer-events: auto;
+    width: auto;
+    height: auto;
+    overflow: visible;
+  }
+  body.pc-sidebar-collapsed .pc-brand-left {
+    display: flex;
+  }
+  body.pc-sidebar-collapsed .pc-brand {
+    justify-content: space-between;
+  }
+  body.pc-sidebar-collapsed .pc-side-link {
+    grid-template-columns: 36px 1fr;
+    justify-items: stretch;
+  }
+  .pc-mobile-menu {
+    display: inline-flex;
+  }
+}
+@media (max-width: 640px) {
+  .pc-sidebar {
+    left: 12px;
+    right: 12px;
+    width: auto;
+    top: 12px;
+    bottom: 12px;
+  }
+}
+
+
+/* PC quiz/test tuning */
+@media (min-width: 1101px) {
+  .test-shell,
+  .question-shell,
+  .quiz-shell,
+  .test-view,
+  #test-screen,
+  #quiz-screen {
+    max-width: 1120px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+  .question-card,
+  .question-box {
+    border-radius: 18px !important;
+    padding: 28px !important;
+  }
+  .options,
+  .option-grid {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 14px !important;
+  }
+  .result-card,
+  .result-box {
+    max-width: 880px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+    border-radius: 18px !important;
+  }
+}
+
+
+/* FINAL CURSOR + WINDOWS DISPLAY FIT FIX */
+@media (pointer:fine) {
+  *, *::before, *::after {
+    cursor: none !important;
+  }
+}
+.pc-cursor {
+  display: none !important;
+}
+.cursor {
+  z-index: 99999 !important;
+  pointer-events: none !important;
+}
+html[data-theme="dark"] .cursor,
+html[data-theme="dark"] #cursor {
+  background: var(--gold, #DDB35A) !important;
+  mix-blend-mode: normal !important;
+  box-shadow: 0 0 18px rgba(221,179,90,.35) !important;
+}
+html[data-theme="dark"] .cursor.big,
+html[data-theme="dark"] #cursor.big {
+  opacity: .24 !important;
+  box-shadow: 0 0 34px rgba(221,179,90,.42) !important;
+}
+@media (min-width: 1101px) and (max-height: 820px) {
+  .pc-sidebar {
+    top: 16px !important;
+    bottom: 16px !important;
+    padding: 16px !important;
+    gap: 12px !important;
+  }
+  .pc-side-link {
+    padding: 8px 10px !important;
+  }
+  .pc-side-icon {
+    width: 32px !important;
+    height: 32px !important;
+  }
+  .pc-meta-box {
+    min-height: 62px !important;
+    padding: 10px !important;
+  }
+  .pc-meta-num {
+    font-size: 24px !important;
+  }
+  .hero {
+    padding-top: 26px !important;
+    padding-bottom: 28px !important;
+  }
+  .hero h1 {
+    font-size: clamp(42px, 5.6vw, 76px) !important;
+  }
+}
+@media (min-width: 1101px) and (max-width: 1450px) {
+  :root {
+    --pc-sidebar-width: 262px;
+    --pc-sidebar-collapsed: 78px;
+  }
+  .pc-sidebar {
+    left: 18px !important;
+    top: 18px !important;
+    bottom: 18px !important;
+    width: var(--pc-sidebar-width) !important;
+    padding: 16px !important;
+  }
+  .pc-side-link {
+    padding: 9px 10px !important;
+  }
+  .pc-side-text strong {
+    font-size: 14px !important;
+  }
+  .pc-side-text span {
+    font-size: 11px !important;
+  }
+  .page {
+    max-width: calc(100vw - 324px) !important;
+    margin-left: 300px !important;
+    margin-right: 24px !important;
+  }
+  body.pc-sidebar-collapsed .page {
+    max-width: calc(100vw - 128px) !important;
+    margin-left: 104px !important;
+    margin-right: 24px !important;
+  }
+}
+
+
+/* REVIEW ANSWER PAGE BUG FIX */
+body.review-open {
+  overflow: hidden !important;
+}
+body.review-open #review-modal {
+  display: block !important;
+}
+#review-modal {
+  background: var(--cream, #F5F0E8) !important;
+  z-index: 9990 !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  isolation: isolate !important;
+  padding: 28px 20px 80px !important;
+}
+.review-inner {
+  max-width: min(1000px, calc(100vw - 80px)) !important;
+  margin: 0 auto !important;
+  position: relative !important;
+  z-index: 1 !important;
+}
+.review-header {
+  position: sticky !important;
+  top: 14px !important;
+  z-index: 20 !important;
+  border-radius: 16px !important;
+  overflow: hidden !important;
+}
+.review-list {
+  position: relative !important;
+  z-index: 1 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 18px !important;
+  max-width: 960px !important;
+  margin: 0 auto !important;
+}
+.review-card {
+  position: relative !important;
+  z-index: 1 !important;
+  overflow: hidden !important;
+  contain: paint !important;
+  border-radius: 18px !important;
+  padding: 24px !important;
+  background: var(--card-bg, #FDFAF5) !important;
+}
+.review-opts {
+  position: relative !important;
+  z-index: 1 !important;
+  display: grid !important;
+  grid-template-columns: 1fr !important;
+  gap: 10px !important;
+}
+.review-opt {
+  position: relative !important;
+  z-index: 1 !important;
+  transform: none !important;
+  will-change: auto !important;
+  overflow: hidden !important;
+  cursor: none !important;
+  border-radius: 12px !important;
+  min-height: 48px !important;
+}
+.review-opt:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+.review-opt::before,
+.review-opt::after {
+  pointer-events: none !important;
+}
+@media (min-width: 1101px) {
+  #review-modal {
+    padding-left: 340px !important;
+    padding-right: 32px !important;
+  }
+  body.pc-sidebar-collapsed #review-modal {
+    padding-left: 126px !important;
+  }
+  .review-inner {
+    max-width: 1060px !important;
+  }
+}
+@media (min-width: 1101px) and (max-width: 1450px) {
+  #review-modal {
+    padding-left: 300px !important;
+  }
+  body.pc-sidebar-collapsed #review-modal {
+    padding-left: 104px !important;
+  }
+}
+@media (max-width: 1100px) {
+  #review-modal {
+    padding: 20px 14px 70px !important;
+  }
+  .review-inner {
+    max-width: 100% !important;
+  }
+}
+
+
+/* MOBILE REPOSITORY OVERRIDES */
+@media (max-width: 900px) {
+  *, *::before, *::after {
+    cursor: auto !important;
+    -webkit-tap-highlight-color: transparent !important;
+  }
+  body {
+    width: 100% !important;
+    min-height: 100vh !important;
+    overflow-x: hidden !important;
+    cursor: auto !important;
+    padding-bottom: 92px !important;
+  }
+  .cursor,
+  #cursor,
+  .pc-cursor,
+  #pc-cursor,
+  .pc-sidebar,
+  #pc-sidebar,
+  .pc-mobile-menu {
+    display: none !important;
+  }
+  .page {
+    width: 100% !important;
+    max-width: 560px !important;
+    margin: 0 auto !important;
+    padding: 0 14px 96px !important;
+  }
+  nav {
+    position: sticky !important;
+    top: 10px !important;
+    z-index: 80 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 10px !important;
+    margin: 10px 0 18px !important;
+    padding: 10px 12px !important;
+    border: 1px solid var(--line, rgba(26,23,20,.10)) !important;
+    border-radius: 18px !important;
+    background: rgba(253,250,245,.82) !important;
+    backdrop-filter: blur(18px) !important;
+    box-shadow: 0 12px 30px rgba(26,23,20,.07) !important;
+  }
+  html[data-theme="dark"] nav {
+    background: rgba(33,28,24,.86) !important;
+    box-shadow: 0 12px 30px rgba(0,0,0,.24) !important;
+  }
+  .logo {
+    font-size: 16px !important;
+  }
+  .back-link {
+    font-size: 10px !important;
+    letter-spacing: 1.4px !important;
+  }
+  .back-arrow {
+    width: 24px !important;
+    height: 24px !important;
+  }
+  .theme-toggle,
+  .top-btn,
+  .primary-btn,
+  .secondary-btn,
+  .submit-btn,
+  .review-close,
+  .timer-chip,
+  .timer-start-btn,
+  .timer-cancel-btn,
+  button,
+  a {
+    touch-action: manipulation !important;
+  }
+  .hero {
+    padding: 32px 0 24px !important;
+  }
+  .hero h1 {
+    font-size: clamp(40px, 13vw, 58px) !important;
+    line-height: .92 !important;
+    letter-spacing: -2.4px !important;
+  }
+  .hero p {
+    max-width: 100% !important;
+    font-size: 14px !important;
+    line-height: 1.65 !important;
+  }
+  .start-panel {
+    grid-template-columns: 1fr !important;
+    border-radius: 20px !important;
+    padding: 22px !important;
+    gap: 18px !important;
+  }
+  .section-row,
+  .section-header {
+    align-items: center !important;
+    gap: 10px !important;
+    margin-bottom: 12px !important;
+  }
+  .chapter-grid,
+  .notes-grid,
+  .test-grid,
+  .grid,
+  .cards-grid,
+  .study-tools-grid,
+  .tools-grid,
+  .results,
+  .mini-links,
+  .update-panel,
+  .updates-layout {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .chapter-card,
+  .note-card,
+  .test-card,
+  .card,
+  .panel,
+  .section-card,
+  .feature-card,
+  .study-tool-card {
+    border-radius: 20px !important;
+    min-height: unset !important;
+  }
+  .note-card,
+  .chapter-card,
+  .test-card,
+  .card {
+    padding: 20px !important;
+  }
+  .chapter-card h2,
+  .note-card h2,
+  .test-card h2,
+  .card h2 {
+    font-size: clamp(24px, 7vw, 34px) !important;
+  }
+  .wide,
+  .wide-panel {
+    grid-column: span 1 !important;
+  }
+  footer {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+    padding-bottom: 20px !important;
+  }
+  .mobile-bottom-nav {
+    display: grid !important;
+  }
+}
+
+/* Mobile bottom navigation */
+.mobile-bottom-nav {
+  position: fixed;
+  left: 10px;
+  right: 10px;
+  bottom: 10px;
+  z-index: 9990;
+  max-width: 540px;
+  margin: 0 auto;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 6px;
+  padding: 8px;
+  border: 1px solid var(--line, rgba(26,23,20,.10));
+  border-radius: 22px;
+  background: rgba(253,250,245,.86);
+  backdrop-filter: blur(18px);
+  box-shadow: 0 18px 50px rgba(26,23,20,.14);
+}
+html[data-theme="dark"] .mobile-bottom-nav {
+  background: rgba(33,28,24,.88);
+  box-shadow: 0 18px 50px rgba(0,0,0,.36);
+}
+.mobile-bottom-nav a {
+  display: grid;
+  place-items: center;
+  gap: 3px;
+  min-height: 46px;
+  border-radius: 16px;
+  color: var(--muted, #7A7068);
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .8px;
+  text-decoration: none;
+}
+.mobile-bottom-nav a strong {
+  font-family: 'Syne', 'Outfit', sans-serif;
+  font-size: 15px;
+  color: var(--ink, #1A1714);
+  line-height: 1;
+}
+@media (min-width: 901px) {
+  .mobile-bottom-nav {
+    display: none !important;
+  }
+}
+
+
+/* MOBILE QUIZ BUG FIXES */
+@media (max-width: 900px) {
+  .test-header {
+    position: sticky !important;
+    top: 8px !important;
+    z-index: 120 !important;
+    width: calc(100% - 18px) !important;
+    margin: 8px auto 0 !important;
+    padding: 10px !important;
+    border-radius: 16px !important;
+    flex-wrap: wrap !important;
+  }
+  .header-left,
+  .progress-wrap {
+    width: 100% !important;
+    justify-content: space-between !important;
+  }
+  .test-title-bar {
+    max-width: 62vw !important;
+    font-size: 13px !important;
+  }
+  .progress-bar-outer {
+    width: 110px !important;
+  }
+  .q-card,
+  .question-card,
+  .question-box {
+    border-radius: 20px !important;
+    padding: 18px !important;
+    margin-bottom: 14px !important;
+  }
+  .question-text,
+  .q-text {
+    font-size: 16px !important;
+    line-height: 1.6 !important;
+  }
+  .options-grid,
+  .options,
+  .option-grid {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .opt-btn,
+  .option,
+  .answer-option {
+    min-height: 54px !important;
+    border-radius: 16px !important;
+    padding: 13px 14px !important;
+    font-size: 14px !important;
+    transform: none !important;
+  }
+  .opt-btn:hover,
+  .option:hover {
+    transform: none !important;
+  }
+  .result-card,
+  .result-box {
+    border-radius: 22px !important;
+    padding: 22px !important;
+    width: 100% !important;
+  }
+  .result-stats {
+    grid-template-columns: 1fr !important;
+  }
+  .result-actions {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    gap: 10px !important;
+  }
+  .result-actions button {
+    width: 100% !important;
+  }
+  #timer-modal {
+    padding: 18px 14px 80px !important;
+  }
+  .timer-box {
+    width: 100% !important;
+    max-width: 420px !important;
+    border-radius: 22px !important;
+    padding: 22px !important;
+  }
+  .timer-presets {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .timer-actions {
+    grid-template-columns: 1fr !important;
+  }
+}
+
+/* Review modal mobile fix */
+body.review-open {
+  overflow: hidden !important;
+}
+#review-modal {
+  z-index: 9995 !important;
+  background: var(--cream, #F5F0E8) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain !important;
+  isolation: isolate !important;
+}
+.review-inner {
+  position: relative !important;
+  z-index: 1 !important;
+}
+.review-header {
+  position: sticky !important;
+  top: 8px !important;
+  z-index: 30 !important;
+  border-radius: 18px !important;
+  overflow: hidden !important;
+}
+.review-list {
+  grid-template-columns: 1fr !important;
+  gap: 14px !important;
+}
+.review-card {
+  position: relative !important;
+  overflow: hidden !important;
+  contain: paint !important;
+  border-radius: 20px !important;
+  padding: 18px !important;
+}
+.review-opts {
+  grid-template-columns: 1fr !important;
+  gap: 9px !important;
+}
+.review-opt {
+  position: relative !important;
+  z-index: 1 !important;
+  transform: none !important;
+  will-change: auto !important;
+  overflow: hidden !important;
+  border-radius: 14px !important;
+  min-height: 46px !important;
+}
+.review-opt:hover {
+  transform: none !important;
+  box-shadow: none !important;
+}
+@media (max-width: 900px) {
+  #review-modal {
+    padding: 14px 12px 86px !important;
+  }
+  .review-inner {
+    max-width: 100% !important;
+  }
+}
+
+
+/* FORCE MOBILE REPO LAYOUT ON EVERY SCREEN */
+*, *::before, *::after {
+  cursor: auto !important;
+}
+body {
+  cursor: auto !important;
+  overflow-x: hidden !important;
+  padding-bottom: 92px !important;
+}
+.cursor,
+#cursor,
+.pc-cursor,
+#pc-cursor,
+.pc-sidebar,
+#pc-sidebar,
+.pc-mobile-menu {
+  display: none !important;
+}
+.page {
+  width: 100% !important;
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+  padding-left: 14px !important;
+  padding-right: 14px !important;
+  padding-bottom: 96px !important;
+}
+nav {
+  max-width: 560px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+.mobile-bottom-nav {
+  display: grid !important;
+}
+.chapter-grid,
+.notes-grid,
+.test-grid,
+.grid,
+.cards-grid,
+.study-tools-grid,
+.tools-grid,
+.results,
+.mini-links,
+.update-panel,
+.updates-layout {
+  grid-template-columns: 1fr !important;
+}
+
+</style>
+</head>
+<body>
+
+<div class="pc-cursor" id="pc-cursor"></div>
+<aside class="pc-sidebar" id="pc-sidebar" aria-label="Zakir Lab navigation">
+  <div class="pc-brand">
+    <div class="pc-brand-left">
+      <span class="pc-brand-dot"></span>
+      <span class="pc-brand-name">Zakir Lab</span>
+    </div>
+    <button class="pc-side-toggle" onclick="togglePcSidebar()" aria-label="Toggle sidebar">‹</button>
+  </div>
+  <div class="pc-side-meta">
+    <div class="pc-meta-box"><div class="pc-meta-num">10</div><div class="pc-meta-label">Sections</div></div>
+    <div class="pc-meta-box"><div class="pc-meta-num">8</div><div class="pc-meta-label">PDF Notes</div></div>
+  </div>
+  <div class="pc-side-label">Main</div>
+  <div class="pc-side-links">
+    <a class="pc-side-link" href="../"><span class="pc-side-icon">H</span><span class="pc-side-text"><strong>Home</strong><span>Back to main page</span></span></a>
+    <a class="pc-side-link" href="../computer-class/"><span class="pc-side-icon">C</span><span class="pc-side-text"><strong>Computer Class</strong><span>Chapter mock tests</span></span></a>
+    <a class="pc-side-link" href="../full-length-test/"><span class="pc-side-icon">T</span><span class="pc-side-text"><strong>Full Tests</strong><span>100-question mocks</span></span></a>
+    <a class="pc-side-link" href="../notes-and-guides/"><span class="pc-side-icon">N</span><span class="pc-side-text"><strong>Notes & Guides</strong><span>PDF library</span></span></a>
+  </div>
+  <div class="pc-side-label">Study Tools</div>
+  <div class="pc-side-links">
+    <a class="pc-side-link" href="../dashboard/"><span class="pc-side-icon">D</span><span class="pc-side-text"><strong>Dashboard</strong><span>Streaks and scores</span></span></a>
+    <a class="pc-side-link" href="../flashcards/"><span class="pc-side-icon">F</span><span class="pc-side-text"><strong>Flashcards</strong><span>Active recall</span></span></a>
+    <a class="pc-side-link" href="../cheatsheets/"><span class="pc-side-icon">S</span><span class="pc-side-text"><strong>Cheatsheets</strong><span>Quick reference</span></span></a>
+    <a class="pc-side-link" href="../pyqs/"><span class="pc-side-icon">P</span><span class="pc-side-text"><strong>PYQs</strong><span>Solved practice</span></span></a>
+    <a class="pc-side-link" href="../leaderboard/"><span class="pc-side-icon">L</span><span class="pc-side-text"><strong>Leaderboard</strong><span>Saved rankings</span></span></a>
+  </div>
+  <div class="pc-side-footer">Est. 2026<br>Everything I build along the way.</div>
+</aside>
+
+<div class="cursor" id="cursor"></div>
+
+<section id="home">
+  <div class="page">
+    <nav>
+      <a class="back-link" href="../computer-class/"><span class="back-arrow">←</span><span>Computer Class</span></a>
+      <a class="logo" href="../"><span class="logo-dot"></span>Zakir Lab</a>
+    </nav>
+    <div class="hero">
+      <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Ch 03 Mock Test</span></div>
+      <h1>Basics of Operating Systems<br><span>Practice</span></h1>
+      <p>OS functions, processes, memory, scheduling, booting, kernels, and system calls.</p>
+      <div class="start-panel">
+        <div>
+          <div class="start-kicker">44 questions</div>
+          <h2>Ready to start?</h2>
+          <p>Select your timer, answer the questions, submit, and review every wrong or skipped answer.</p>
+        </div>
+        <button class="primary-btn" id="open-timer">Start Test →</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="test-screen">
+  <div class="test-header">
+    <div class="header-left">
+      <button class="secondary-btn" onclick="goChapter()">← Class</button>
+      <div class="test-title-bar">Basics of Operating Systems</div>
+    </div>
+    <div class="progress-wrap">
+      <span class="timer-pill" id="timer-pill">No timer</span>
+      <div class="progress-bar-outer"><div class="progress-bar-inner" id="progress-bar"></div></div>
+      <span class="progress-label" id="progress-label">0 / 44</span>
+      <button class="submit-btn" id="submit-btn">Submit</button>
+    </div>
+  </div>
+  <div class="questions-wrap" id="questions-wrap"></div>
+</section>
+
+<section id="result-screen">
+  <div class="result-inner">
+    <div class="result-badge">Result</div>
+    <h2 class="result-title" id="result-title">Your Score</h2>
+    <div class="score-big"><span id="score-num">0</span><span style="font-size:32px;color:var(--muted)">/44</span></div>
+    <p class="score-msg" id="score-msg"></p>
+    <div class="stats-row">
+      <div class="stat-pill"><span class="val correct-val" id="r-correct">0</span><span class="lbl">Correct</span></div>
+      <div class="stat-pill"><span class="val wrong-val" id="r-wrong">0</span><span class="lbl">Wrong</span></div>
+      <div class="stat-pill"><span class="val skip-val" id="r-skip">0</span><span class="lbl">Skipped</span></div>
+    </div>
+    <div class="result-actions">
+      <button class="secondary-btn" onclick="goChapter()">← Class</button>
+      <button class="secondary-btn" id="btn-review">Review Answers</button>
+      <button class="secondary-btn" id="btn-share">Share Result</button>
+      <button class="primary-btn" id="btn-retry">Retry Test</button>
+    </div>
+  </div>
+</section>
+
+<div id="review-modal">
+  <div class="review-inner">
+    <div class="review-header">
+      <div>
+        <div class="review-title">Review Answers</div>
+        <div style="color:var(--muted);font-size:12px">Correct answers and your selected answers are marked.</div>
+      </div>
+      <button class="review-close" id="review-close">Close</button>
+    </div>
+    <div class="review-list" id="review-list"></div>
+  </div>
+</div>
+
+<div id="timer-modal">
+  <div class="timer-box">
+    <div class="timer-kicker">Timer Setup</div>
+    <div class="timer-title">Choose time</div>
+    <p class="timer-sub">Pick a preset or set your own time. You can also start without a timer.</p>
+    <div class="timer-presets">
+      <button class="timer-chip selected" data-min="15">15 min</button>
+      <button class="timer-chip" data-min="30">30 min</button>
+      <button class="timer-chip" data-min="60">60 min</button>
+      <button class="timer-chip" data-min="0">No timer</button>
+    </div>
+    <div class="timer-custom-row">
+      <label for="timer-input">Custom minutes</label>
+      <input class="timer-input" id="timer-input" type="number" min="0" max="300" value="15"/>
+    </div>
+    <div class="timer-actions">
+      <button class="timer-cancel-btn" id="timer-cancel">Cancel</button>
+      <button class="timer-start-btn" id="timer-start">Start Now</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="share-toast">Score card copied</div>
+<script>
+const LABELS = ['A','B','C','D','E','F'];
+const QUESTIONS = [
+  {
+    "q": "Hard real time operating system has _____jitter than a soft real time operating system.",
+    "o": [
+      "Equal",
+      "More",
+      "Less",
+      "None of the mentioned"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 1
+  },
+  {
+    "q": "Operating system",
+    "o": [
+      "Links a program with the subroutines it references",
+      "Provides a layered, user-friendly interface",
+      "Enables the programmer to draw a flowchart"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 2
+  },
+  {
+    "q": "Which is built directly on the hardware?",
+    "o": [
+      "Computer environment",
+      "Application software",
+      "Operating system",
+      "Database system"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 3
+  },
+  {
+    "q": "The operating system manages",
+    "o": [
+      "Memory",
+      "Processor",
+      "Disks and I/O device",
+      "All of the above"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 4
+  },
+  {
+    "q": "Swapping ____ be done when a process has pending I/O, or has to execute I/O operations only into operating system buffers.",
+    "o": [
+      "Must never",
+      "Maybe",
+      "Can",
+      "Must"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 5
+  },
+  {
+    "q": "A real time operating system is most likely to be used for which of the following task?",
+    "o": [
+      "Controlling access to a shared printer in a network",
+      "Ensuring that system clock works correctly on the server",
+      "Managing the access to system files in a laptop computer",
+      "Controlling the fuel injection system of an automobile engines"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 6
+  },
+  {
+    "q": "In operating system, each process has its own_______",
+    "o": [
+      "Open files",
+      "Pending alarms, signals, and signal handlers",
+      "Address space and global variables",
+      "All of the mentioned"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 7
+  },
+  {
+    "q": "Which principle states that programs, users, and even the systems be given just enough privileges to perform their task?",
+    "o": [
+      "Principle of least privilege",
+      "Principle of process scheduling",
+      "Principles of operating system",
+      "None of the mentioned"
+    ],
+    "a": 0,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 8
+  },
+  {
+    "q": "In real time operating system______",
+    "o": [
+      "Process scheduling can be done only once",
+      "All processes have the same priority",
+      "All process has not the same priority",
+      "A task must be serviced by its deadline period."
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 9
+  },
+  {
+    "q": "Which is the first program run on a computer when the computer boots up?",
+    "o": [
+      "System software",
+      "Operating system",
+      "System operations",
+      "None"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 10
+  },
+  {
+    "q": "What are the types of distributed operating systems?",
+    "o": [
+      "Zone based operating system",
+      "Level based operating system",
+      "Network operating system",
+      "All of the mentioned"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 11
+  },
+  {
+    "q": "The primary purpose of an operating system is to",
+    "o": [
+      "Make computer easier to use",
+      "Keep system programmers employed",
+      "Make the most efficient use of hardware",
+      "Allow people to sue the computers"
+    ],
+    "a": 0,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 12
+  },
+  {
+    "q": "Which of the following is not a real time operating system?",
+    "o": [
+      "RTlinux",
+      "Palm OS",
+      "QNX",
+      "VxWorks"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 13
+  },
+  {
+    "q": "_______Controls the way in which the computer system functions and provides a means by which users can interact with the computer",
+    "o": [
+      "The platform",
+      "The operating system",
+      "Application software",
+      "The motherboard"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 14
+  },
+  {
+    "q": "Which is not the function of the operating system?",
+    "o": [
+      "Memory management",
+      "Disk management",
+      "Application management",
+      "Virus protection"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 15
+  },
+  {
+    "q": "A deadlock avoidance algorithm dynamically examines the _____ to ensure that a circular wait condition can never exist.",
+    "o": [
+      "Operating system",
+      "Resources",
+      "System storage state",
+      "Resource allocation state"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 16
+  },
+  {
+    "q": "The _____ presents a uniform device-access interface to the I/O subsystem, much as system calls provide a standard interface between the application and the operating system.",
+    "o": [
+      "Device drivers",
+      "I/O systems",
+      "Devices",
+      "Buses"
+    ],
+    "a": 0,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 17
+  },
+  {
+    "q": "The operating system keeps a small table containing information about all open files called______",
+    "o": [
+      "File table",
+      "Directory table",
+      "Open-file table",
+      "System table"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 18
+  },
+  {
+    "q": "To obtain a better memory utilization, dynamic loading is used. With dynamic loading, a routine is not loaded until it is called. For implementing dynamic loading____",
+    "o": [
+      "Special support from operating system is essential",
+      "Special support from the hardware is required",
+      "User programs can implement dynamic loading without any special support from the hardware or operating system",
+      "Special support from both hardware and operating system is essential"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 19
+  },
+  {
+    "q": "To access the services of the operating system, the interface is provided by the ________",
+    "o": [
+      "Library",
+      "System calls",
+      "Assembly instructions",
+      "API"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 20
+  },
+  {
+    "q": "The _____ operating system was initially created in the early 1970s at AT & T’s Bell Labs.",
+    "o": [
+      "Linux",
+      "DOS",
+      "Unix",
+      "GNU"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 21
+  },
+  {
+    "q": "Network operating system runs on_______?",
+    "o": [
+      "Every system in the network",
+      "Server",
+      "Both server and every server in the network",
+      "None of the mentioned"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 22
+  },
+  {
+    "q": "Which is the layer of a computer system between the hardware and the user program",
+    "o": [
+      "Operating environment",
+      "Operating system",
+      "System environment",
+      "None"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 23
+  },
+  {
+    "q": "For an effective operating system, when to check for deadlock?",
+    "o": [
+      "Every time a resource request is made at fixed time intervals",
+      "At fixed time intervals",
+      "Every time a resource request is made",
+      "None of the mentioned"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 24
+  },
+  {
+    "q": "Transient operating system code is a code that_____.",
+    "o": [
+      "Stays in the memory always",
+      "Never enters the memory space",
+      "Comes and goes as needed",
+      "Is not easily accessible"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 25
+  },
+  {
+    "q": "What does OS X has?",
+    "o": [
+      "Monolithic kernel with modules",
+      "Microkernel",
+      "Monolithic kernel",
+      "Hybrid kernel"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 26
+  },
+  {
+    "q": "CPU scheduling is the basis of ____.",
+    "o": [
+      "Multiprogramming operating systems",
+      "Larger memory sized systems",
+      "Multiprocessor systems",
+      "None of the mentioned"
+    ],
+    "a": 0,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 27
+  },
+  {
+    "q": "The operating system is responsible for?",
+    "o": [
+      "Bad-block recovery",
+      "Booting from disk",
+      "Disk initialization",
+      "All the above mentioned"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 28
+  },
+  {
+    "q": "Which of the following is not true?",
+    "o": [
+      "Kernel remains in the memory during the entire computer session",
+      "Kernel is made of various modules which can not be loaded in running the operating system",
+      "Kernel is the first part of the operating system to load into the memory during booting",
+      "Kernel is the program that constitutes the central core of the operating system"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 29
+  },
+  {
+    "q": "______ is used in operating system to separate mechanism from policy.",
+    "o": [
+      "Single level implementation",
+      "Two level implementation",
+      "Multilevel implementation",
+      "None"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 30
+  },
+  {
+    "q": "What are the characteristics of host-based IDS?",
+    "o": [
+      "Logs are analysed to detect tails od intrusion",
+      "The host operating system logs in the audit information",
+      "Logs includes login, file opens, and program executions",
+      "All of the mentioned"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 31
+  },
+  {
+    "q": "______ system is build directly on the hardware",
+    "o": [
+      "Environment",
+      "System",
+      "Operating",
+      "None"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 32
+  },
+  {
+    "q": "During the boot process, the ____looks for the system file",
+    "o": [
+      "CD",
+      "BIOS",
+      "CPU",
+      "DVD"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 33
+  },
+  {
+    "q": "Two basic types of operating systems are:",
+    "o": [
+      "Sequential and direct",
+      "Batch and timesharing",
+      "Sequential and real-time",
+      "Batch and interactive"
+    ],
+    "a": 3,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 34
+  },
+  {
+    "q": "The portion of the process scheduler in an operating system that dispatches processes is concerned with _____",
+    "o": [
+      "Assigning ready processes to waiting queue",
+      "Assigning running processes to  blocked queue",
+      "Assigning ready processes to CPU",
+      "All of the mentioned"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 35
+  },
+  {
+    "q": "Using transient code, ____ the size of the operating system during program execution.",
+    "o": [
+      "Maintains",
+      "Changes",
+      "Increases",
+      "Decreases"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 36
+  },
+  {
+    "q": "For real time operating systems, interrupt latency should be ____.",
+    "o": [
+      "Zero",
+      "Minimum",
+      "Maximum",
+      "Dependent on the scheduling"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 37
+  },
+  {
+    "q": "An essential difference between the operating system that runs a typical desktop computer and the operating system that runs a typical PDA is that _______",
+    "o": [
+      "The desktop OS has a graphical user’s interface whereas the PDA OS doesn’t.",
+      "The desktop OS can run several programs simultaneously whereas the PDA OS can’t.",
+      "The desktop OS manages hardware resources whereas the PDA OS does not",
+      "The desktop computer has an OS whereas a PDA does not."
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 38
+  },
+  {
+    "q": "The term “operating system” means",
+    "o": [
+      "A set of programs which controls computer working",
+      "The way a computer operator works",
+      "Conversion of high-level language into machine code",
+      "None of the above"
+    ],
+    "a": 0,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 39
+  },
+  {
+    "q": "The FCFS algorithm is particularly troublesome for _______",
+    "o": [
+      "Operating systems",
+      "Multiprocessor systems",
+      "Time sharing systems",
+      "Multiprogramming systems"
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 40
+  },
+  {
+    "q": "Which of the following system is produced by IBM?",
+    "o": [
+      "OS-2",
+      "Windows",
+      "DOS",
+      "UNIX"
+    ],
+    "a": 0,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 41
+  },
+  {
+    "q": "The primary job of the operating system of a computer is to",
+    "o": [
+      "Command resources",
+      "Manage resources",
+      "Provide utilities",
+      "Be user friendly"
+    ],
+    "a": 1,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 42
+  },
+  {
+    "q": "To obtain better memory utilization, dynamic loading is used. With dynamic loading, a routine is not loaded until it is called. For implementing dynamic  loading____",
+    "o": [
+      "Special support from operating system is essential",
+      "Special support from the hardware is required",
+      "User programs can implement dynamic loading without any special support from hardware or operating system",
+      "Special support from both hardware and operating system is essential."
+    ],
+    "a": 2,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 43
+  },
+  {
+    "q": "The _____ program initializes all aspects of the system, from CPU\nregisters to device controllers and the contents of main memory and then starts the operating system.",
+    "o": [
+      "Bootstrap",
+      "Main",
+      "Bootloader",
+      "Rom"
+    ],
+    "a": 0,
+    "source": "Basics of Operating Systems",
+    "sourceNo": 44
+  }
+];
+let answered = {};
+let submitted = false;
+let timerSeconds = 15 * 60;
+let timerInterval = null;
+
+function escapeHtml(value) {
+  return String(value).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#039;');
+}
+function textToHtml(value) { return escapeHtml(value).replace(/\n/g, '<br>'); }
+function label(i) { return LABELS[i] || String(i+1); }
+
+function renderQuestions() {
+  const wrap = document.getElementById('questions-wrap');
+  wrap.innerHTML = QUESTIONS.map((q, qi) => `
+    <div class="q-card" style="animation-delay:${Math.min(qi * 0.018, 0.6)}s">
+      <span class="q-num">Question ${String(qi + 1).padStart(2,'0')}</span>
+      <div class="q-text">${textToHtml(q.q)}</div>
+      <div class="options-grid">
+        ${q.o.map((opt, oi) => `
+          <button class="opt-btn" id="opt-${qi}-${oi}" onclick="choose(event, ${qi}, ${oi})">
+            <span class="fill-layer"></span>
+            <span class="opt-label">${label(oi)}</span>
+            <span class="opt-text">${textToHtml(opt)}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+}
+
+function choose(event, qi, oi) {
+  if (submitted) return;
+  const clicked = document.getElementById(`opt-${qi}-${oi}`);
+  const already = answered[qi] === oi;
+
+  QUESTIONS[qi].o.forEach((_, i) => {
+    const btn = document.getElementById(`opt-${qi}-${i}`);
+    btn.classList.remove('selected', 'draining');
+  });
+
+  createRipple(event, clicked);
+
+  if (already) {
+    delete answered[qi];
+    clicked.classList.add('draining');
+    setTimeout(() => clicked.classList.remove('draining'), 650);
+  } else {
+    answered[qi] = oi;
+    clicked.classList.add('selected');
+    clicked.animate([
+      { transform:'scale(1)' },
+      { transform:'scale(1.025) translateY(-2px)' },
+      { transform:'scale(1)' }
+    ], { duration:360, easing:'cubic-bezier(.16,1,.3,1)' });
+  }
+  updateProgress();
+}
+
+function createRipple(event, el) {
+  const rect = el.getBoundingClientRect();
+  const size = Math.max(rect.width, rect.height);
+  const rip = document.createElement('span');
+  rip.className = 'ripple';
+  rip.style.width = rip.style.height = size + 'px';
+  rip.style.left = (event.clientX - rect.left - size / 2) + 'px';
+  rip.style.top = (event.clientY - rect.top - size / 2) + 'px';
+  el.appendChild(rip);
+  setTimeout(() => rip.remove(), 900);
+}
+
+function updateProgress() {
+  const done = Object.keys(answered).length;
+  document.getElementById('progress-bar').style.width = ((done / QUESTIONS.length) * 100) + '%';
+  document.getElementById('progress-label').textContent = `${done} / ${QUESTIONS.length}`;
+}
+
+function submitTest() {
+  if (submitted) return;
+  submitted = true;
+  clearInterval(timerInterval);
+
+  QUESTIONS.forEach((q, qi) => {
+    q.o.forEach((_, i) => {
+      const b = document.getElementById(`opt-${qi}-${i}`);
+      b.disabled = true;
+      b.classList.remove('selected', 'draining');
+    });
+  });
+
+  QUESTIONS.forEach((q, qi) => {
+    setTimeout(() => {
+      const chosen = answered[qi];
+      if (chosen === undefined) {
+        document.getElementById(`opt-${qi}-${q.a}`).classList.add('skipped-correct');
+      } else if (chosen === q.a) {
+        document.getElementById(`opt-${qi}-${chosen}`).classList.add('correct');
+      } else {
+        document.getElementById(`opt-${qi}-${chosen}`).classList.add('wrong');
+        document.getElementById(`opt-${qi}-${q.a}`).classList.add('correct');
+      }
+    }, qi * 35);
+  });
+
+  let correct = 0, wrong = 0, skip = 0;
+  QUESTIONS.forEach((q, qi) => {
+    if (answered[qi] === undefined) skip++;
+    else if (answered[qi] === q.a) correct++;
+    else wrong++;
+  });
+
+  setTimeout(() => showResult(correct, wrong, skip), QUESTIONS.length * 35 + 500);
+}
+
+function showResult(correct, wrong, skip) {
+  document.getElementById('test-screen').style.display = 'none';
+  document.getElementById('result-screen').style.display = 'block';
+  window.scrollTo(0, 0);
+
+  document.getElementById('score-num').textContent = correct;
+  document.getElementById('r-correct').textContent = correct;
+  document.getElementById('r-wrong').textContent = wrong;
+  document.getElementById('r-skip').textContent = skip;
+
+  const pct = correct / QUESTIONS.length;
+  let msg = '';
+  if (pct === 1) msg = 'Perfect score. The answer gods have signed your paper.';
+  else if (pct >= .8) msg = 'Excellent work. A few tiny gremlins left to defeat.';
+  else if (pct >= .6) msg = 'Good attempt. Review the tricky ones and try again.';
+  else if (pct >= .4) msg = 'Fair attempt. Your revision engine needs more fuel.';
+  else msg = 'Keep practising. Every retry sharpens the blade.';
+  document.getElementById('score-msg').textContent = msg;
+  saveZakirScore(correct, wrong, skip);
+
+  document.getElementById('btn-review').style.display = (wrong + skip) === 0 ? 'none' : 'inline-block';
+  if (pct === 1) launchConfetti();
+}
+
+function renderReview() {
+  const list = document.getElementById('review-list');
+  list.innerHTML = QUESTIONS.map((q, qi) => {
+    const chosen = answered[qi];
+    const isCorrect = chosen === q.a;
+    const skipped = chosen === undefined;
+    return `
+      <div class="review-card">
+        <span class="q-num">Question ${String(qi + 1).padStart(2,'0')}</span>
+        <div class="review-q-text">${textToHtml(q.q)}</div>
+        <div class="review-opts">
+          ${q.o.map((opt, oi) => {
+            const cls = oi === q.a ? 'right' : (oi === chosen && !isCorrect ? 'yours' : '');
+            return `<div class="review-opt ${cls}">
+              <span class="review-opt-label">${label(oi)}</span>
+              <span>${textToHtml(opt)}</span>
+            </div>`;
+          }).join('')}
+        </div>
+        <div class="review-tags">
+          ${isCorrect ? '<span class="tag correct">Correct</span>' : skipped ? '<span class="tag skip">Skipped</span>' : '<span class="tag wrong">Wrong</span>'}
+          <span class="tag">Answer: ${label(q.a)}</span>
+          ${skipped ? '' : `<span class="tag">You: ${label(chosen)}</span>`}
+        </div>
+      </div>
+    `;
+  }).join('');
+}
+
+function startWithTimer() {
+  const v = Math.max(0, Number(document.getElementById('timer-input').value || 0));
+  timerSeconds = Math.round(v * 60);
+  document.getElementById('timer-modal').style.display = 'none';
+  document.getElementById('home').style.display = 'none';
+  document.getElementById('test-screen').style.display = 'block';
+  renderQuestions();
+  updateProgress();
+  window.scrollTo(0, 0);
+  if (timerSeconds > 0) startTimer(); else document.getElementById('timer-pill').textContent = 'No timer';
+}
+
+function startTimer() {
+  const pill = document.getElementById('timer-pill');
+  const tick = () => {
+    const min = Math.floor(timerSeconds / 60);
+    const sec = timerSeconds % 60;
+    pill.textContent = `${String(min).padStart(2,'0')}:${String(sec).padStart(2,'0')}`;
+    pill.classList.toggle('low', timerSeconds <= 60);
+    if (timerSeconds <= 0) {
+      pill.textContent = 'Time up';
+      pill.classList.add('done');
+      clearInterval(timerInterval);
+      submitTest();
+      return;
+    }
+    timerSeconds--;
+  };
+  tick();
+  timerInterval = setInterval(tick, 1000);
+}
+
+function retry() {
+  answered = {};
+  submitted = false;
+  clearInterval(timerInterval);
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('timer-modal').style.display = 'block';
+}
+
+function goChapter() { location.href = '../computer-class/'; }
+
+function launchConfetti() {
+  const layer = document.createElement('div');
+  layer.className = 'confetti-layer';
+  for (let i = 0; i < 90; i++) {
+    const p = document.createElement('span');
+    p.className = 'confetti-piece';
+    p.style.left = Math.random() * 100 + 'vw';
+    p.style.setProperty('--duration', (2.6 + Math.random() * 1.8) + 's');
+    p.style.setProperty('--delay', (Math.random() * .5) + 's');
+    p.style.setProperty('--drift', ((Math.random() - .5) * 240) + 'px');
+    p.style.setProperty('--rot', (Math.random() * 360) + 'deg');
+    layer.appendChild(p);
+  }
+  document.body.appendChild(layer);
+  setTimeout(() => layer.remove(), 5200);
+}
+
+document.getElementById('open-timer').addEventListener('click', () => {
+  document.getElementById('timer-modal').style.display = 'block';
+});
+document.getElementById('timer-cancel').addEventListener('click', () => {
+  document.getElementById('timer-modal').style.display = 'none';
+});
+document.getElementById('timer-start').addEventListener('click', startWithTimer);
+document.querySelectorAll('.timer-chip').forEach(chip => {
+  chip.addEventListener('click', () => {
+    document.querySelectorAll('.timer-chip').forEach(c => c.classList.remove('selected'));
+    chip.classList.add('selected');
+    document.getElementById('timer-input').value = chip.dataset.min;
+  });
+});
+
+function getZakirQuizTitle() {
+  try {
+    if (typeof TESTS !== 'undefined' && typeof selectedTestIndex !== 'undefined' && TESTS[selectedTestIndex]) {
+      return TESTS[selectedTestIndex].title;
+    }
+  } catch(e) {}
+  const titleBar = document.querySelector('.test-title-bar');
+  if (titleBar) return titleBar.textContent.trim();
+  return document.title.replace('— Mock Test','').replace('— Zakir Lab','').trim();
+}
+
+function saveZakirScore(correct, wrong, skip) {
+  const total = QUESTIONS.length;
+  const title = getZakirQuizTitle();
+  const percent = Math.round((correct / total) * 100);
+  const entry = {
+    title,
+    correct,
+    wrong,
+    skip,
+    total,
+    percent,
+    date: new Date().toISOString()
+  };
+  const history = JSON.parse(localStorage.getItem('ZAKIR_SCORE_HISTORY') || '[]');
+  history.push(entry);
+  localStorage.setItem('ZAKIR_SCORE_HISTORY', JSON.stringify(history.slice(-80)));
+  window.ZAKIR_CURRENT_RESULT = entry;
+}
+
+function showZakirToast(message) {
+  let toast = document.getElementById('share-toast');
+  if (!toast) {
+    toast = document.createElement('div');
+    toast.id = 'share-toast';
+    toast.className = 'toast';
+    document.body.appendChild(toast);
+  }
+  toast.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 2200);
+}
+
+async function shareZakirResult() {
+  const r = window.ZAKIR_CURRENT_RESULT;
+  if (!r) return showZakirToast('Submit the test first');
+  const text = `Zakir Lab Score Card\n${r.title}\nScore: ${r.correct}/${r.total} (${r.percent}%)\nCorrect: ${r.correct} | Wrong: ${r.wrong} | Skipped: ${r.skip}\n\nTry the mock tests on Zakir Lab.`;
+  try {
+    if (navigator.share) {
+      await navigator.share({ title: 'Zakir Lab Score', text });
+    } else {
+      await navigator.clipboard.writeText(text);
+      showZakirToast('Score card copied');
+    }
+  } catch (e) {
+    try {
+      await navigator.clipboard.writeText(text);
+      showZakirToast('Score card copied');
+    } catch {
+      showZakirToast('Sharing not available');
+    }
+  }
+}
+
+
+document.getElementById('submit-btn').addEventListener('click', submitTest);
+document.getElementById('btn-share').addEventListener('click', shareZakirResult);
+document.getElementById('btn-retry').addEventListener('click', retry);
+document.getElementById('btn-review').addEventListener('click', () => {
+  renderReview();
+  document.body.classList.add('review-open');
+  document.body.classList.add('review-open');
+  document.getElementById('review-modal').style.display = 'block';
+});
+document.getElementById('review-close').addEventListener('click', () => {
+  document.getElementById('review-modal').style.display = 'none';
+  document.body.classList.remove('review-open');
+  document.body.classList.remove('review-open');
+});
+
+const cursor = document.getElementById('cursor');
+if (cursor) {
+  document.addEventListener('mousemove', e => {
+    cursor.style.left = e.clientX + 'px';
+    cursor.style.top = e.clientY + 'px';
+  });
+  document.querySelectorAll('a, button, .q-card, .opt-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => cursor.classList.add('big'));
+    el.addEventListener('mouseleave', () => cursor.classList.remove('big'));
+  });
+}
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.body.classList.contains('review-open')) {
+    const rm = document.getElementById('review-modal');
+    if (rm) rm.style.display = 'none';
+    document.body.classList.remove('review-open');
+  }
+});
+
+
+// Mobile review escape close
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape' && document.body.classList.contains('review-open')) {
+    const rm = document.getElementById('review-modal');
+    if (rm) rm.style.display = 'none';
+    document.body.classList.remove('review-open');
+  }
+});
+
+</script>
+</body>
+</html>
