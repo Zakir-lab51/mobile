@@ -645,7 +645,7 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
 
   <div class="quick-actions">
     <a class="quick-btn primary" href="study/">Start Studying</a>
-    <a class="quick-btn secondary" href="notes-and-guides/">Open Notes</a>
+    <a class="quick-btn secondary" href="study/">All Subjects</a>
   </div>
 
   <div class="stat-strip">
@@ -665,9 +665,9 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
         <div><span class="tag">Anatomy Library</span><h2>Anatomy<br>PDFs</h2></div>
         <p>16 anatomy PDFs arranged for quick study.</p><span class="arrow">-&gt;</span>
       </a>
-      <a class="tile" href="notes-and-guides/" data-num="03">
-        <div><span class="tag">Study Library</span><h2>Other<br>Notes</h2></div>
-        <p>Other notes and class materials arranged neatly.</p><span class="arrow">-&gt;</span>
+      <a class="tile" href="study/" data-num="03">
+        <div><span class="tag">Subject Hub</span><h2>All<br>Subjects</h2></div>
+        <p>Anatomy, physiology, HDPC, communication and biochemistry.</p><span class="arrow">-&gt;</span>
       </a>
       <a class="tile dark" href="recents/" data-num="04">
         <div><span class="tag">Recent Files</span><h2>Recently<br>Opened</h2></div>
@@ -727,13 +727,12 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
   const results = document.getElementById('search-results');
   const SEARCH_INDEX = [
     ['Computer Class','Mock Tests','Chapter-wise computer application tests','computer-class/'],
-    ['Study Hub','Subjects','Physiology, HDPC, Communication Skills, Anatomy and Biochemistry','study/'],
+    ['All Subjects','Subjects','Physiology, HDPC, Communication Skills, Anatomy and Biochemistry','study/'],
     ['Physiology','Subject','Physiology PDF page','physiology/'],
     ['HDPC','Subject','HDPC PDF page','hdpc/'],
     ['Communication Skills','Subject','Communication Skills PDF page','communication-skills/'],
     ['Biochemistry','Subject','Biochemistry PDF page','biochemistry/'],
     ['Anatomy','Study Library','16 anatomy PDFs for quick mobile study','anatomy/'],
-    ['Other Notes','Study Library','Extra notes and future PDFs','notes-and-guides/'],
     ['Full Length Tests','Mock Exam','Four 100-question computer application tests','full-length-test/'],
     ['Recents','Recent Files','Recently opened anatomy and other notes PDFs','recents/'],
     ['Flashcards','Revision','Flip cards for terms and exam prep','flashcards/'],
@@ -759,7 +758,7 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
   <a href="./"><strong>H</strong><span>Home</span></a>
   <a href="./computer-class/"><strong>C</strong><span>Class</span></a>
   <a href="./anatomy/"><strong>A</strong><span>Anatomy</span></a>
-  <a href="./notes-and-guides/"><strong>N</strong><span>Notes</span></a>
+  <a href="./study/"><strong>S</strong><span>Subjects</span></a>
   <a href="./recents/"><strong>R</strong><span>Recents</span></a>
 </nav>
 
@@ -773,7 +772,7 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
     if (path.endsWith('/index.html')) path = path.slice(0, -10);
     if (path.indexOf('/computer-class/') !== -1) return 1;
     if (path.indexOf('/anatomy/') !== -1) return 2;
-    if (path.indexOf('/notes-and-guides/') !== -1) return 3;
+    if (path.indexOf('/study/') !== -1 || path.indexOf('/physiology/') !== -1 || path.indexOf('/hdpc/') !== -1 || path.indexOf('/communication-skills/') !== -1 || path.indexOf('/biochemistry/') !== -1) return 3;
     if (path.indexOf('/recents/') !== -1) return 4;
     if (path === '/' || path === '/mobile' || path === '/mobile/') return 0;
     var saved = Number(sessionStorage.getItem('ZAKIR_MOBILE_NAV_INDEX'));

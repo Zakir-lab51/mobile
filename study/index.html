@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>Study Hub - Zakir Lab Mobile</title>
+<title>All Subjects - Zakir Lab Mobile</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
 <script data-zakir-theme-bootstrap>
@@ -287,13 +287,13 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
   </header>
 
   <section class="hero">
-    <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Start Studying</span></div>
-    <h1>Study<br><span>Subjects</span></h1>
-    <p>Choose a subject to open its dedicated study page.</p>
+    <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">All Subjects</span></div>
+    <h1>All<br><span>Subjects</span></h1>
+    <p>Choose Anatomy, Physiology, HDPC, Communication Skills, or Biochemistry.</p>
   </section>
 
   <section>
-    <div class="section-row"><span class="section-title">Subject Tiles</span><span class="section-note">5 subjects</span></div>
+    <div class="section-row"><span class="section-title">All Subject Tiles</span><span class="section-note">5 subjects</span></div>
     <div class="notes-grid">
       <a class="note-card" href="../physiology/" data-num="01">
         <div class="note-top"><span class="note-tag">Body Function</span><span class="note-mark">PHY</span></div>
@@ -333,7 +333,7 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
   <a href="../"><strong>H</strong><span>Home</span></a>
   <a href="../computer-class/"><strong>C</strong><span>Class</span></a>
   <a href="../anatomy/"><strong>A</strong><span>Anatomy</span></a>
-  <a href="../notes-and-guides/"><strong>N</strong><span>Notes</span></a>
+  <a href="../study/"><strong>S</strong><span>Subjects</span></a>
   <a href="../recents/"><strong>R</strong><span>Recents</span></a>
 </nav>
 
@@ -347,9 +347,8 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
     if (path.endsWith('/index.html')) path = path.slice(0, -10);
     if (path.indexOf('/computer-class/') !== -1) return 1;
     if (path.indexOf('/anatomy/') !== -1) return 2;
-    if (path.indexOf('/notes-and-guides/') !== -1) return 3;
+    if (path.indexOf('/study/') !== -1 || path.indexOf('/physiology/') !== -1 || path.indexOf('/hdpc/') !== -1 || path.indexOf('/communication-skills/') !== -1 || path.indexOf('/biochemistry/') !== -1) return 3;
     if (path.indexOf('/recents/') !== -1) return 4;
-    if (path.indexOf('/study/') !== -1 || path.indexOf('/physiology/') !== -1 || path.indexOf('/hdpc/') !== -1 || path.indexOf('/communication-skills/') !== -1 || path.indexOf('/biochemistry/') !== -1) return 0;
     if (path === '/' || path === '/mobile' || path === '/mobile/') return 0;
     var saved = Number(sessionStorage.getItem('ZAKIR_MOBILE_NAV_INDEX'));
     return Number.isFinite(saved) && saved >= 0 && saved < links.length ? saved : 0;
