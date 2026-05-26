@@ -167,6 +167,33 @@
   }
   .quick-btn.primary { background:var(--ink); color:var(--cream); }
   .quick-btn.secondary { background:transparent; color:var(--ink); }
+  .visitor-counter {
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    margin:-6px 0 22px;
+    padding:12px 13px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:var(--card);
+    color:var(--ink);
+    text-decoration:none;
+    box-shadow:var(--shadow);
+  }
+  .visitor-counter span {
+    color:var(--muted);
+    font-size:10px;
+    letter-spacing:1.3px;
+    text-transform:uppercase;
+    white-space:nowrap;
+  }
+  .visitor-counter img {
+    display:block;
+    height:20px;
+    width:auto;
+    max-width:150px;
+  }
   .stat-strip {
     display:grid;
     grid-template-columns:repeat(3,1fr);
@@ -647,6 +674,11 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
     <a class="quick-btn primary" href="study/">Start Studying</a>
     <a class="quick-btn secondary" href="study/">All Subjects</a>
   </div>
+
+  <a class="visitor-counter" href="https://hits.sh/zakir-lab51.github.io/" target="_blank" rel="noopener" aria-label="Zakir Lab visitor count">
+    <span>Visitor Count</span>
+    <img src="https://hits.sh/zakir-lab51.github.io.svg?style=flat-square&label=Visitors&color=c84b2f&labelColor=1a1714&view=total" alt="Zakir Lab visitor count">
+  </a>
 
   <div class="stat-strip">
     <div class="stat"><strong>10</strong><span>Sections</span></div>
