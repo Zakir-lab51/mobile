@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Communication Skills - Zakir Lab Mobile</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
+<script data-zakir-theme-bootstrap>
+(function() {
+  var themeKey = 'ZAKIR_THEME';
+  function normalizeTheme(value) { return value === 'dark' ? 'dark' : 'light'; }
+  function updateThemeLabels(theme) {
+    document.querySelectorAll('[data-theme-label]').forEach(function(el) {
+      el.textContent = theme === 'dark' ? 'Light' : 'Dark';
+    });
+  }
+  window.applyZakirTheme = function(theme) {
+    var next = normalizeTheme(theme);
+    document.documentElement.dataset.theme = next;
+    try { localStorage.setItem(themeKey, next); } catch (error) {}
+    updateThemeLabels(next);
+    return next;
+  };
+  window.toggleTheme = function() {
+    var current = normalizeTheme(document.documentElement.dataset.theme);
+    return window.applyZakirTheme(current === 'dark' ? 'light' : 'dark');
+  };
+  try {
+    document.documentElement.dataset.theme = normalizeTheme(localStorage.getItem(themeKey) || 'light');
+  } catch (error) {
+    document.documentElement.dataset.theme = 'light';
+  }
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', function() { updateThemeLabels(normalizeTheme(document.documentElement.dataset.theme)); });
+  } else {
+    updateThemeLabels(normalizeTheme(document.documentElement.dataset.theme));
+  }
+})();
+</script>
+<style>
+  *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; -webkit-tap-highlight-color:transparent; }
+  :root {
+    --cream:#F5F0E8;
+    --ink:#1A1714;
+    --accent:#C84B2F;
+    --gold:#D4A847;
+    --muted:#7A7068;
+    --card:#FDFAF5;
+    --card-bg:#FDFAF5;
+    --line:rgba(26,23,20,.10);
+    --shadow:0 18px 45px rgba(26,23,20,.08);
+  }
+  html { scroll-behavior:smooth; }
+  body {
+    min-height:100vh;
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'DM Sans',sans-serif;
+    overflow-x:hidden;
+    padding-bottom:96px;
+  }
+  body::before {
+    content:"";
+    position:fixed;
+    inset:0;
+    pointer-events:none;
+    z-index:0;
+    background:
+      radial-gradient(circle at 18% 4%, rgba(212,168,71,.18), transparent 30%),
+      radial-gradient(circle at 90% 12%, rgba(200,75,47,.12), transparent 32%);
+  }
+  a { color:inherit; text-decoration:none; }
+  .app { position:relative; z-index:1; width:min(100%, 560px); margin:0 auto; padding:14px 14px 0; }
+  .topbar {
+    position:sticky;
+    top:10px;
+    z-index:10;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    padding:11px 12px;
+    border:1px solid var(--line);
+    border-radius:18px;
+    background:rgba(253,250,245,.78);
+    backdrop-filter:blur(18px);
+    box-shadow:0 12px 30px rgba(26,23,20,.06);
+  }
+  html[data-theme="dark"] .topbar { background:rgba(33,28,24,.78); box-shadow:0 12px 30px rgba(0,0,0,.24); }
+  .brand { display:flex; align-items:center; gap:9px; min-width:0; }
+  .brand-dot { width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 7px rgba(200,75,47,.10); }
+  .brand-name { font-family:'Syne',sans-serif; font-weight:800; letter-spacing:-.7px; font-size:19px; white-space:nowrap; }
+  .top-actions { display:flex; gap:8px; }
+  .icon-btn {
+    border:1px solid var(--line);
+    background:var(--card);
+    color:var(--ink);
+    border-radius:999px;
+    padding:9px 11px;
+    font-size:11px;
+    letter-spacing:1.5px;
+    text-transform:uppercase;
+    font-family:'DM Sans',sans-serif;
+  }
+  .hero { padding:44px 4px 18px; }
+  .eyebrow { display:flex; align-items:center; gap:10px; margin-bottom:18px; }
+  .eyebrow-line { width:34px; height:1px; background:var(--accent); }
+  .eyebrow-text { color:var(--accent); font-size:11px; letter-spacing:2.6px; text-transform:uppercase; }
+  .hero h1 { font-family:'Syne',sans-serif; font-size:clamp(48px,15vw,72px); line-height:.88; letter-spacing:-3px; }
+  .hero h1 span { color:var(--accent); font-style:italic; }
+  .hero p { margin-top:22px; color:var(--muted); line-height:1.7; font-weight:300; max-width:330px; }
+  .section-row { display:flex; justify-content:space-between; align-items:baseline; gap:12px; margin:24px 4px 12px; }
+  .section-title { font-family:'Syne',sans-serif; font-size:13px; letter-spacing:2.8px; text-transform:uppercase; }
+  .section-note { color:var(--muted); font-size:11px; text-transform:uppercase; letter-spacing:1px; }
+  .notes-grid { display:grid; gap:12px; }
+  .note-card {
+    position:relative;
+    min-height:172px;
+    display:flex;
+    flex-direction:column;
+    justify-content:space-between;
+    border:1px solid var(--line);
+    border-radius:22px;
+    padding:20px;
+    background:radial-gradient(circle at top right, rgba(212,168,71,.16), transparent 36%), var(--card);
+    box-shadow:var(--shadow);
+    overflow:hidden;
+  }
+  .note-card::after {
+    content:attr(data-num);
+    position:absolute;
+    right:10px;
+    bottom:-8px;
+    font-family:'Syne',sans-serif;
+    font-weight:800;
+    font-size:76px;
+    letter-spacing:-4px;
+    line-height:1;
+    color:rgba(26,23,20,.05);
+  }
+  html[data-theme="dark"] .note-card::after { color:rgba(245,240,232,.06); }
+  .note-top, .note-footer { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .note-tag { color:var(--accent); font-size:10px; letter-spacing:2px; text-transform:uppercase; }
+  .note-mark { border:1px solid var(--line); border-radius:999px; padding:7px 9px; color:var(--muted); font-size:10px; letter-spacing:1.3px; }
+  .note-card h2 { position:relative; z-index:1; font-family:'Syne',sans-serif; font-size:clamp(25px,7vw,34px); line-height:.98; letter-spacing:-1px; max-width:82%; }
+  .note-footer { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px; }
+  .note-arrow { width:36px; height:36px; display:grid; place-items:center; border:1px solid var(--line); border-radius:50%; color:var(--ink); }
+  .recents-actions { display:flex; justify-content:flex-end; margin:14px 4px 0; }
+  .clear-recents {
+    border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:999px;
+    padding:10px 13px; font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:1.3px; text-transform:uppercase;
+  }
+  .recent-empty {
+    border:1px dashed var(--line); border-radius:20px; padding:22px; color:var(--muted);
+    background:rgba(253,250,245,.45); line-height:1.6; margin:0 4px;
+  }
+  .recent-empty[hidden], .clear-recents[hidden] { display:none !important; }
+  html[data-theme="dark"] .recent-empty { background:rgba(245,240,232,.04); }
+
+  footer { padding:26px 4px 10px; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; gap:12px; }
+
+/* Mobile shared theme and floating bottom nav */
+html[data-theme="dark"] {
+  --cream:#15120F;
+  --ink:#F5F0E8;
+  --accent:#E66A4E;
+  --gold:#DDB35A;
+  --muted:#B7AAA0;
+  --card:#211C18;
+  --card-bg:#211C18;
+  --line:rgba(245,240,232,.12);
+  --shadow:0 18px 45px rgba(0,0,0,.30);
+  --correct:#5FC785;
+  --wrong:#FF7C65;
+  --skip:#DDB35A;
+}
+html[data-theme="dark"] body {
+  background:var(--cream);
+  color:var(--ink);
+}
+html[data-theme="dark"] :where(.topbar, nav, .tile, .mini, .updates, .stat, .card, .chapter-card, .note-card, .test-card, .panel, .section-card, .full-length-card, .start-panel, .search-box, .result-item, .opt-btn, .review-opt, .timer-input) {
+  border-color:var(--line);
+}
+html[data-theme="dark"] :where(.tile, .mini, .updates, .stat, .card, .chapter-card, .note-card, .test-card, .panel, .section-card, .search-box, .result-item, .timer-input) {
+  background:var(--card-bg, var(--card));
+  color:var(--ink);
+}
+.bottom-nav,
+.mobile-bottom-nav {
+  position:fixed !important;
+  left:10px !important;
+  right:10px !important;
+  bottom:10px !important;
+  top:auto !important;
+  height:auto !important;
+  min-height:0 !important;
+  align-items:stretch !important;
+  justify-content:normal !important;
+  z-index:9990 !important;
+  max-width:540px !important;
+  margin:0 auto !important;
+  display:grid !important;
+  grid-template-columns:repeat(5, minmax(0, 1fr)) !important;
+  gap:6px !important;
+  padding:8px !important;
+  border:1px solid var(--line, rgba(26,23,20,.10)) !important;
+  border-radius:22px !important;
+  background:rgba(253,250,245,.86) !important;
+  backdrop-filter:blur(18px) !important;
+  box-shadow:0 18px 50px rgba(26,23,20,.14) !important;
+  overflow:hidden !important;
+  isolation:isolate !important;
+}
+html[data-theme="dark"] .bottom-nav,
+html[data-theme="dark"] .mobile-bottom-nav {
+  background:rgba(33,28,24,.88) !important;
+  box-shadow:0 18px 50px rgba(0,0,0,.36) !important;
+}
+.bottom-nav .nav-indicator,
+.mobile-bottom-nav .nav-indicator {
+  position:absolute;
+  left:8px;
+  top:8px;
+  width:calc((100% - 40px) / 5);
+  height:46px;
+  border-radius:16px;
+  background:rgba(200,75,47,.13);
+  border:1px solid rgba(200,75,47,.18);
+  transform:translateX(calc(var(--nav-index, 0) * (100% + 6px)));
+  transition:transform .34s cubic-bezier(.16,1,.3,1), background .3s ease, border-color .3s ease;
+  pointer-events:none;
+  z-index:0;
+}
+html[data-theme="dark"] .bottom-nav .nav-indicator,
+html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
+  background:rgba(230,106,78,.18);
+  border-color:rgba(230,106,78,.26);
+}
+.bottom-nav a,
+.mobile-bottom-nav a {
+  position:relative;
+  z-index:1;
+  display:grid !important;
+  place-items:center !important;
+  gap:3px !important;
+  min-height:46px !important;
+  border-radius:16px !important;
+  color:var(--muted) !important;
+  font-size:10px !important;
+  text-transform:uppercase !important;
+  letter-spacing:.8px !important;
+  text-decoration:none !important;
+}
+.bottom-nav a strong,
+.mobile-bottom-nav a strong {
+  font-family:'Syne','Outfit',sans-serif !important;
+  font-size:15px !important;
+  color:var(--ink) !important;
+  line-height:1 !important;
+}
+.bottom-nav a.active,
+.mobile-bottom-nav a.active,
+.bottom-nav a.active strong,
+.mobile-bottom-nav a.active strong {
+  color:var(--accent) !important;
+}
+@media (max-width:360px) {
+  .bottom-nav,
+  .mobile-bottom-nav { gap:4px !important; padding:7px !important; }
+  .bottom-nav .nav-indicator,
+  .mobile-bottom-nav .nav-indicator { left:7px; top:7px; width:calc((100% - 30px) / 5); }
+  .bottom-nav a,
+  .mobile-bottom-nav a { font-size:9px !important; }
+}
+
+</style>
+</head>
+<body>
+<div class="app">
+  <header class="topbar">
+    <a class="brand" href="../"><span class="brand-dot"></span><span class="brand-name">Zakir Lab</span></a>
+    <div class="top-actions">
+      <a class="icon-btn" href="../study/">Study</a>
+      <button class="icon-btn" type="button" onclick="toggleTheme()"><span data-theme-label>Dark</span></button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Communication Skills</span></div>
+    <h1>Communication<br><span>Skills</span></h1>
+    <p>Communication Skills PDFs will be arranged here.</p>
+  </section>
+
+  <section>
+    <div class="section-row"><span class="section-title">Communication Skills PDFs</span><span class="section-note">Ready</span></div>
+    <div class="recent-empty">PDFs not added yet.</div>
+  </section>
+
+  <footer>
+    <span>&copy; 2026 Zakir Lab</span>
+    <span>Mobile build</span>
+  </footer>
+</div>
+<nav class="mobile-bottom-nav" data-mobile-nav aria-label="Mobile navigation">
+  <span class="nav-indicator" aria-hidden="true"></span>
+  <a href="../"><strong>H</strong><span>Home</span></a>
+  <a href="../computer-class/"><strong>C</strong><span>Class</span></a>
+  <a href="../anatomy/"><strong>A</strong><span>Anatomy</span></a>
+  <a href="../notes-and-guides/"><strong>N</strong><span>Notes</span></a>
+  <a href="../recents/"><strong>R</strong><span>Recents</span></a>
+</nav>
+
+<script data-mobile-nav-script>
+(function() {
+  var nav = document.querySelector('[data-mobile-nav]');
+  if (!nav) return;
+  var links = Array.prototype.slice.call(nav.querySelectorAll('a'));
+  function getIndexFromPath() {
+    var path = window.location.pathname;
+    if (path.endsWith('/index.html')) path = path.slice(0, -10);
+    if (path.indexOf('/computer-class/') !== -1) return 1;
+    if (path.indexOf('/anatomy/') !== -1) return 2;
+    if (path.indexOf('/notes-and-guides/') !== -1) return 3;
+    if (path.indexOf('/recents/') !== -1) return 4;
+    if (path.indexOf('/study/') !== -1 || path.indexOf('/physiology/') !== -1 || path.indexOf('/hdpc/') !== -1 || path.indexOf('/communication-skills/') !== -1 || path.indexOf('/biochemistry/') !== -1) return 0;
+    if (path === '/' || path === '/mobile' || path === '/mobile/') return 0;
+    var saved = Number(sessionStorage.getItem('ZAKIR_MOBILE_NAV_INDEX'));
+    return Number.isFinite(saved) && saved >= 0 && saved < links.length ? saved : 0;
+  }
+  function setActive(index) {
+    nav.style.setProperty('--nav-index', String(index));
+    links.forEach(function(link, linkIndex) { link.classList.toggle('active', linkIndex === index); });
+  }
+  links.forEach(function(link, index) {
+    link.addEventListener('click', function() {
+      try { sessionStorage.setItem('ZAKIR_MOBILE_NAV_INDEX', String(index)); } catch (error) {}
+      setActive(index);
+    });
+  });
+  setActive(getIndexFromPath());
+})();
+</script>
+
+</body>
+</html>
