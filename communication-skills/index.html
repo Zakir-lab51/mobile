@@ -87,7 +87,7 @@
     backdrop-filter:blur(18px);
     box-shadow:0 12px 30px rgba(26,23,20,.06);
   }
-  html[data-theme="dark"] .topbar { background:rgba(33,28,24,.78); box-shadow:0 12px 30px rgba(0,0,0,.24); }
+  html[data-theme="dark"] .topbar { background:rgba(18,22,21,.78); box-shadow:0 12px 30px rgba(0,0,0,.24); }
   .brand { display:flex; align-items:center; gap:9px; min-width:0; }
   .brand-dot { width:10px; height:10px; border-radius:50%; background:var(--accent); box-shadow:0 0 0 7px rgba(200,75,47,.10); }
   .brand-name { font-family:'Syne',sans-serif; font-weight:800; letter-spacing:-.7px; font-size:19px; white-space:nowrap; }
@@ -139,7 +139,7 @@
     line-height:1;
     color:rgba(26,23,20,.05);
   }
-  html[data-theme="dark"] .note-card::after { color:rgba(245,240,232,.06); }
+  html[data-theme="dark"] .note-card::after { color:rgba(246,241,232,.06); }
   .note-top, .note-footer { position:relative; z-index:1; display:flex; align-items:center; justify-content:space-between; gap:12px; }
   .note-tag { color:var(--accent); font-size:10px; letter-spacing:2px; text-transform:uppercase; }
   .note-mark { border:1px solid var(--line); border-radius:999px; padding:7px 9px; color:var(--muted); font-size:10px; letter-spacing:1.3px; }
@@ -156,24 +156,24 @@
     background:rgba(253,250,245,.45); line-height:1.6; margin:0 4px;
   }
   .recent-empty[hidden], .clear-recents[hidden] { display:none !important; }
-  html[data-theme="dark"] .recent-empty { background:rgba(245,240,232,.04); }
+  html[data-theme="dark"] .recent-empty { background:rgba(246,241,232,.04); }
 
   footer { padding:26px 4px 10px; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; gap:12px; }
 
 /* Mobile shared theme and floating bottom nav */
 html[data-theme="dark"] {
-  --cream:#15120F;
-  --ink:#F5F0E8;
-  --accent:#E66A4E;
-  --gold:#DDB35A;
-  --muted:#B7AAA0;
-  --card:#211C18;
-  --card-bg:#211C18;
-  --line:rgba(245,240,232,.12);
+  --cream:#0D1110;
+  --ink:#F6F1E8;
+  --accent:#D96F5A;
+  --gold:#D8BA68;
+  --muted:#AAB2AA;
+  --card:#171B19;
+  --card-bg:#171B19;
+  --line:rgba(246,241,232,.13);
   --shadow:0 18px 45px rgba(0,0,0,.30);
-  --correct:#5FC785;
-  --wrong:#FF7C65;
-  --skip:#DDB35A;
+  --correct:#6ED49A;
+  --wrong:#F07868;
+  --skip:#D8BA68;
 }
 html[data-theme="dark"] body {
   background:var(--cream);
@@ -214,7 +214,7 @@ html[data-theme="dark"] :where(.tile, .mini, .updates, .stat, .card, .chapter-ca
 }
 html[data-theme="dark"] .bottom-nav,
 html[data-theme="dark"] .mobile-bottom-nav {
-  background:rgba(33,28,24,.88) !important;
+  background:rgba(18,22,21,.88) !important;
   box-shadow:0 18px 50px rgba(0,0,0,.36) !important;
 }
 .bottom-nav .nav-indicator,
@@ -234,8 +234,8 @@ html[data-theme="dark"] .mobile-bottom-nav {
 }
 html[data-theme="dark"] .bottom-nav .nav-indicator,
 html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
-  background:rgba(230,106,78,.18);
-  border-color:rgba(230,106,78,.26);
+  background:rgba(217,111,90,.18);
+  border-color:rgba(217,111,90,.26);
 }
 .bottom-nav a,
 .mobile-bottom-nav a {
