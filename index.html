@@ -666,14 +666,14 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
         <p>16 anatomy PDFs arranged for quick study.</p><span class="arrow">-&gt;</span>
       </a>
       <a class="tile" href="notes-and-guides/" data-num="03">
-        <div><span class="tag">Study Library</span><h2>Notes &amp;<br>Guides</h2></div>
-        <p>PDF notes and class materials arranged neatly.</p><span class="arrow">-&gt;</span>
+        <div><span class="tag">Study Library</span><h2>Other<br>Notes</h2></div>
+        <p>Other notes and class materials arranged neatly.</p><span class="arrow">-&gt;</span>
       </a>
-      <a class="tile dark" href="dashboard/" data-num="04">
-        <div><span class="tag">Live Progress</span><h2>Learning<br>Dashboard</h2></div>
-        <p>Track streaks, completed topics and saved scores.</p><span class="arrow">-&gt;</span>
+      <a class="tile dark" href="recents/" data-num="04">
+        <div><span class="tag">Recent Files</span><h2>Recently<br>Opened</h2></div>
+        <p>Jump back to PDF files opened on this phone.</p><span class="arrow">-&gt;</span>
       </a>
-    </div>
+      </div>
   </section>
 
   <section>
@@ -693,7 +693,7 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
     <div class="updates">
       <h3>What's New</h3>
       <div class="update-line"><span class="dot"></span><span>Mobile-first homepage with floating bottom navigation.</span></div>
-      <div class="update-line"><span class="dot"></span><span>Anatomy PDFs are now available from the mobile homepage and bottom nav.</span></div>
+      <div class="update-line"><span class="dot"></span><span>Recents now keeps recently opened anatomy and other notes PDFs in the bottom nav.</span></div>
       <div class="update-line"><span class="dot"></span><span>Quiz review pages and timer popups are fixed for mobile scrolling.</span></div>
     </div>
   </section>
@@ -728,9 +728,9 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
   const SEARCH_INDEX = [
     ['Computer Class','Mock Tests','Chapter-wise computer application tests','computer-class/'],
     ['Anatomy','Study Library','16 anatomy PDFs for quick mobile study','anatomy/'],
-    ['Notes & Guides','PDF Library','Communication, digestive system, HDPC, blood physiology and more','notes-and-guides/'],
+    ['Other Notes','Study Library','Communication, digestive system, HDPC, blood physiology and more','notes-and-guides/'],
     ['Full Length Tests','Mock Exam','Four 100-question computer application tests','full-length-test/'],
-    ['Dashboard','Progress','Study streak, completed topics and score history','dashboard/'],
+    ['Recents','Recent Files','Recently opened anatomy and other notes PDFs','recents/'],
     ['Flashcards','Revision','Flip cards for terms and exam prep','flashcards/'],
     ['Cheatsheets','Reference','Keyboard shortcuts and quick reference','cheatsheets/'],
     ['PYQs','Practice','Previous-year style questions with answers','pyqs/'],
@@ -755,7 +755,7 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
   <a href="./computer-class/"><strong>C</strong><span>Class</span></a>
   <a href="./anatomy/"><strong>A</strong><span>Anatomy</span></a>
   <a href="./notes-and-guides/"><strong>N</strong><span>Notes</span></a>
-  <a href="./dashboard/"><strong>D</strong><span>Dash</span></a>
+  <a href="./recents/"><strong>R</strong><span>Recents</span></a>
 </nav>
 
 <script data-mobile-nav-script>
@@ -769,7 +769,7 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
     if (path.indexOf('/computer-class/') !== -1) return 1;
     if (path.indexOf('/anatomy/') !== -1) return 2;
     if (path.indexOf('/notes-and-guides/') !== -1) return 3;
-    if (path.indexOf('/dashboard/') !== -1) return 4;
+    if (path.indexOf('/recents/') !== -1) return 4;
     if (path === '/' || path === '/mobile' || path === '/mobile/') return 0;
     var saved = Number(sessionStorage.getItem('ZAKIR_MOBILE_NAV_INDEX'));
     return Number.isFinite(saved) && saved >= 0 && saved < links.length ? saved : 0;

@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
-<title>Anatomy - Zakir Lab Mobile</title>
+<title>Recents - Zakir Lab Mobile</title>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=DM+Sans:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet"/>
 <script data-zakir-theme-bootstrap>
@@ -146,6 +146,18 @@
   .note-card h2 { position:relative; z-index:1; font-family:'Syne',sans-serif; font-size:clamp(25px,7vw,34px); line-height:.98; letter-spacing:-1px; max-width:82%; }
   .note-footer { color:var(--muted); font-size:12px; text-transform:uppercase; letter-spacing:1px; }
   .note-arrow { width:36px; height:36px; display:grid; place-items:center; border:1px solid var(--line); border-radius:50%; color:var(--ink); }
+  .recents-actions { display:flex; justify-content:flex-end; margin:14px 4px 0; }
+  .clear-recents {
+    border:1px solid var(--line); background:var(--card); color:var(--ink); border-radius:999px;
+    padding:10px 13px; font-family:'DM Sans',sans-serif; font-size:10px; letter-spacing:1.3px; text-transform:uppercase;
+  }
+  .recent-empty {
+    border:1px dashed var(--line); border-radius:20px; padding:22px; color:var(--muted);
+    background:rgba(253,250,245,.45); line-height:1.6; margin:0 4px;
+  }
+  .recent-empty[hidden], .clear-recents[hidden] { display:none !important; }
+  html[data-theme="dark"] .recent-empty { background:rgba(245,240,232,.04); }
+
   footer { padding:26px 4px 10px; color:var(--muted); font-size:12px; display:flex; justify-content:space-between; gap:12px; }
 
 /* Mobile shared theme and floating bottom nav */
@@ -275,97 +287,16 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
   </header>
 
   <section class="hero">
-    <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Anatomy</span></div>
-    <h1>Anatomy<br><span>Library</span></h1>
-    <p>16 anatomy PDFs arranged for quick mobile study.</p>
+    <div class="eyebrow"><span class="eyebrow-line"></span><span class="eyebrow-text">Recents</span></div>
+    <h1>Recent<br><span>Files</span></h1>
+    <p>Your recently opened anatomy and other notes PDFs stay here on this phone.</p>
   </section>
 
   <section>
-    <div class="section-row"><span class="section-title">Anatomy PDFs</span><span class="section-note">16 files</span></div>
-    <div class="notes-grid">
-      
-      <a class="note-card" href="files/axilla-anatomy.pdf" target="_blank" rel="noopener" data-num="01">
-        <div class="note-top"><span class="note-tag">Upper Limb</span><span class="note-mark">PDF</span></div>
-        <h2>Axilla Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/cuboital-fossae.pdf" target="_blank" rel="noopener" data-num="02">
-        <div class="note-top"><span class="note-tag">Upper Limb</span><span class="note-mark">PDF</span></div>
-        <h2>Cuboital Fossae</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/gall-bladder-anatomy.pdf" target="_blank" rel="noopener" data-num="03">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
-        <h2>Gall Bladder Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/hand-anatomy.pdf" target="_blank" rel="noopener" data-num="04">
-        <div class="note-top"><span class="note-tag">Upper Limb</span><span class="note-mark">PDF</span></div>
-        <h2>Hand Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/hip-joint-anatomy.pdf" target="_blank" rel="noopener" data-num="05">
-        <div class="note-top"><span class="note-tag">Lower Limb</span><span class="note-mark">PDF</span></div>
-        <h2>Hip Joint Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/large-intestine.pdf" target="_blank" rel="noopener" data-num="06">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
-        <h2>Large Intestine</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/larynx-anatomy.pdf" target="_blank" rel="noopener" data-num="07">
-        <div class="note-top"><span class="note-tag">Respiratory Tract</span><span class="note-mark">PDF</span></div>
-        <h2>Larynx Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/liver-anatomy.pdf" target="_blank" rel="noopener" data-num="08">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
-        <h2>Liver Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/lung-and-bronchopulmonary-segments.pdf" target="_blank" rel="noopener" data-num="09">
-        <div class="note-top"><span class="note-tag">Thorax</span><span class="note-mark">PDF</span></div>
-        <h2>Lung and Bronchopulmonary Segments</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/mediastinum-anatomy.pdf" target="_blank" rel="noopener" data-num="10">
-        <div class="note-top"><span class="note-tag">Thorax</span><span class="note-mark">PDF</span></div>
-        <h2>Mediastinum Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/oesophagus.pdf" target="_blank" rel="noopener" data-num="11">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
-        <h2>Oesophagus</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/pancreas-anatomy.pdf" target="_blank" rel="noopener" data-num="12">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
-        <h2>Pancreas Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/small-intestine-anatomy.pdf" target="_blank" rel="noopener" data-num="13">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
-        <h2>Small Intestine Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/stomach-anatomy.pdf" target="_blank" rel="noopener" data-num="14">
-        <div class="note-top"><span class="note-tag">Digestive System</span><span class="note-mark">PDF</span></div>
-        <h2>Stomach Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/thorax-and-mechanism-of-respiration.pdf" target="_blank" rel="noopener" data-num="15">
-        <div class="note-top"><span class="note-tag">Thorax</span><span class="note-mark">PDF</span></div>
-        <h2>Thorax and Mechanism of Respiration</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-      <a class="note-card" href="files/trachea-anatomy.pdf" target="_blank" rel="noopener" data-num="16">
-        <div class="note-top"><span class="note-tag">Respiratory Tract</span><span class="note-mark">PDF</span></div>
-        <h2>Trachea Anatomy</h2>
-        <div class="note-footer"><span>Open PDF</span><span class="note-arrow">&rarr;</span></div>
-      </a>
-    
-    </div>
+    <div class="section-row"><span class="section-title">Opened PDFs</span><span class="section-note">Local history</span></div>
+    <div class="notes-grid" id="recents-list" aria-live="polite"></div>
+    <div class="recent-empty" id="recents-empty">No recent files yet. Open an anatomy or other notes PDF and it will appear here.</div>
+    <div class="recents-actions"><button class="clear-recents" id="clear-recents" type="button">Clear Recents</button></div>
   </section>
 
   <footer>
@@ -373,7 +304,6 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
     <span>Mobile build</span>
   </footer>
 </div>
-
 <nav class="mobile-bottom-nav" data-mobile-nav aria-label="Mobile navigation">
   <span class="nav-indicator" aria-hidden="true"></span>
   <a href="../"><strong>H</strong><span>Home</span></a>
@@ -412,49 +342,73 @@ html[data-theme="dark"] .mobile-bottom-nav .nav-indicator {
   setActive(getIndexFromPath());
 })();
 </script>
-<script data-zakir-recents-tracker>
+
+<script data-zakir-recents-renderer>
 (function() {
   var storageKey = 'ZAKIR_RECENT_FILES_V1';
+  var list = document.getElementById('recents-list');
+  var empty = document.getElementById('recents-empty');
+  var clear = document.getElementById('clear-recents');
+  if (!list || !empty) return;
   function readRecents() {
     try {
       var parsed = JSON.parse(localStorage.getItem(storageKey) || '[]');
-      return Array.isArray(parsed) ? parsed.filter(Boolean) : [];
+      return Array.isArray(parsed) ? parsed.filter(function(item) { return item && item.url; }) : [];
     } catch (error) {
       return [];
     }
   }
   function saveRecents(items) {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(items.slice(0, 20)));
-    } catch (error) {}
+    try { localStorage.setItem(storageKey, JSON.stringify(items.slice(0, 20))); } catch (error) {}
   }
-  function cleanText(node, fallback) {
-    var text = node ? node.textContent : '';
-    text = text ? text.replace(/\s+/g, ' ').trim() : '';
-    return text || fallback;
-  }
-  function currentSection() {
-    var label = cleanText(document.querySelector('.eyebrow-text'), 'PDF Library');
-    return label === 'Notes & Guides' ? 'Other Notes' : label;
-  }
-  document.querySelectorAll('a.note-card[href$=".pdf"]').forEach(function(link) {
-    link.addEventListener('click', function() {
-      var href = link.getAttribute('href');
-      if (!href) return;
-      var url;
-      try { url = new URL(href, window.location.href).href; } catch (error) { return; }
-      var item = {
-        title: cleanText(link.querySelector('h2'), 'PDF file'),
-        url: url,
-        section: currentSection(),
-        tag: cleanText(link.querySelector('.note-tag'), currentSection()),
-        openedAt: new Date().toISOString()
-      };
-      var next = readRecents().filter(function(existing) { return existing && existing.url !== item.url; });
-      next.unshift(item);
-      saveRecents(next);
+  function escapeHtml(value) {
+    return String(value || '').replace(/[&<>"']/g, function(ch) {
+      return ({ '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;' })[ch];
     });
+  }
+  function formatOpened(iso) {
+    var date = new Date(iso || '');
+    if (!Number.isFinite(date.getTime())) return 'Recently opened';
+    return date.toLocaleString(undefined, { month:'short', day:'numeric', hour:'2-digit', minute:'2-digit' });
+  }
+  function normalizeItem(item) {
+    return {
+      title: item.title || 'PDF file',
+      url: item.url,
+      section: item.section || 'PDF Library',
+      tag: item.tag || item.section || 'PDF',
+      openedAt: item.openedAt || new Date().toISOString()
+    };
+  }
+  function render() {
+    var items = readRecents().map(normalizeItem).slice(0, 20);
+    empty.hidden = items.length > 0;
+    if (clear) clear.hidden = items.length === 0;
+    list.innerHTML = items.map(function(item, index) {
+      return '<a class="note-card" href="' + escapeHtml(item.url) + '" target="_blank" rel="noopener" data-recent-url="' + escapeHtml(item.url) + '" data-num="' + String(index + 1).padStart(2, '0') + '">' +
+        '<div class="note-top"><span class="note-tag">' + escapeHtml(item.section) + '</span><span class="note-mark">PDF</span></div>' +
+        '<h2>' + escapeHtml(item.title) + '</h2>' +
+        '<div class="note-footer"><span>' + escapeHtml(formatOpened(item.openedAt)) + '</span><span class="note-arrow">&rarr;</span></div>' +
+      '</a>';
+    }).join('');
+  }
+  list.addEventListener('click', function(event) {
+    var card = event.target.closest('a[data-recent-url]');
+    if (!card) return;
+    var url = card.getAttribute('data-recent-url');
+    var items = readRecents().map(normalizeItem);
+    var match = items.find(function(item) { return item.url === url; });
+    if (!match) return;
+    match.openedAt = new Date().toISOString();
+    saveRecents([match].concat(items.filter(function(item) { return item.url !== url; })));
   });
+  if (clear) {
+    clear.addEventListener('click', function() {
+      saveRecents([]);
+      render();
+    });
+  }
+  render();
 })();
 </script>
 </body>
